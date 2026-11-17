@@ -1,0 +1,2282 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İtalyan Usulü Tiramisu Ustası - İnteraktif Yemek Oyunu</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FDF8F2',
+                        parchment: '#F5EBE0',
+                        espresso: '#2C1810',
+                        mocha: '#4A2C1D',
+                        cocoa: '#6F4E37',
+                        terracotta: '#C85A32',
+                        gold: '#D4AF37',
+                        mascarpone: '#FFFDF9',
+                        yolk: '#F59E0B',
+                        pistachio: '#558B2F'
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FDF8F2;
+            background-image: 
+                radial-gradient(#E6D5C3 1px, transparent 1px),
+                radial-gradient(#E6D5C3 1px, #FDF8F2 1px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+            color: #2C1810;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow-x: hidden;
+        }
+
+        /* Custom Animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        @keyframes steamRise {
+            0% { transform: translateY(0) scaleX(1); opacity: 0.75; }
+            50% { transform: translateY(-20px) scaleX(1.3); opacity: 0.45; }
+            100% { transform: translateY(-42px) scaleX(0.9); opacity: 0; }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(200, 90, 50, 0.45); }
+            50% { box-shadow: 0 0 0 12px rgba(200, 90, 50, 0); }
+        }
+        @keyframes mixerVibrate {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-2px, 1.5px) rotate(-1.2deg); }
+            50% { transform: translate(2px, -1.5px) rotate(1.2deg); }
+            75% { transform: translate(-1.5px, -1px) rotate(-0.8deg); }
+            100% { transform: translate(1.5px, 1px) rotate(0.8deg); }
+        }
+        @keyframes beaterSpin {
+            0% { transform: scaleX(1); }
+            50% { transform: scaleX(-1); }
+            100% { transform: scaleX(1); }
+        }
+        @keyframes bowlSwirl {
+            0%, 100% { transform: translateX(-6px) scaleY(1); }
+            50% { transform: translateX(6px) scaleY(1.08); }
+        }
+        @keyframes splashUp {
+            0% { transform: translateY(0) scale(1); opacity: 0.95; }
+            100% { transform: translateY(-38px) scale(0.4); opacity: 0; }
+        }
+        @keyframes trashWobble {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-8deg) scale(1.08); }
+            50% { transform: rotate(8deg) scale(1.08); }
+            75% { transform: rotate(-4deg) scale(1.03); }
+        }
+        @keyframes yolkDropAnim {
+            0% { transform: translateY(-55px) scale(0.7); opacity: 0; }
+            30% { opacity: 1; }
+            80% { transform: translateY(5px) scale(1.1, 0.85); opacity: 1; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        @keyframes windBlow {
+            0% { transform: translateX(0) translateY(0); opacity: 0; }
+            30% { opacity: 0.85; }
+            100% { transform: translateX(-140px) translateY(15px); opacity: 0; }
+        }
+        @keyframes foldMotion {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            30% { transform: translate(-18px, 24px) rotate(-22deg); }
+            65% { transform: translate(18px, -14px) rotate(22deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        @keyframes cocoaFall {
+            0% { transform: translateY(0) scale(1); opacity: 0.95; }
+            100% { transform: translateY(85px) scale(0.7); opacity: 0; }
+        }
+
+        .animate-float {
+            animation: floatSlow 3s ease-in-out infinite;
+        }
+        .steam-particle {
+            animation: steamRise 2s infinite ease-out;
+        }
+        .mixer-running {
+            animation: mixerVibrate 0.08s infinite linear;
+        }
+        .mixer-running .beater-whirl {
+            animation: beaterSpin 0.07s infinite linear;
+            transform-origin: center;
+        }
+        .swirl-active {
+            animation: bowlSwirl 0.22s infinite ease-in-out;
+        }
+        .trash-shake {
+            animation: trashWobble 0.42s ease-in-out;
+        }
+        .yolk-drop {
+            animation: yolkDropAnim 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .wind-line {
+            animation: windBlow 0.65s infinite linear;
+        }
+        .fold-animate {
+            animation: foldMotion 0.6s ease-in-out;
+        }
+        .btn-action {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: pulseGlow 2.2s infinite;
+        }
+        .btn-action:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.02);
+        }
+        .btn-action:active:not(:disabled) {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        /* Marble Countertop Texture */
+        .countertop {
+            background: linear-gradient(145deg, #ffffff 0%, #f6efe8 50%, #ece0d1 100%);
+            box-shadow: inset 0 2px 15px rgba(74, 44, 29, 0.08), 0 12px 32px -8px rgba(44, 24, 16, 0.15);
+        }
+
+        /* Glass Bowl Effect */
+        .glass-bowl {
+            background: linear-gradient(180deg, rgba(255,255,255,0.68) 0%, rgba(240,248,255,0.38) 100%);
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                inset 0 -12px 24px rgba(180, 200, 220, 0.35),
+                0 10px 20px rgba(44, 24, 16, 0.12);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- TOP NAVIGATION & STATUS BAR -->
+    <header class="w-full bg-espresso text-cream shadow-lg sticky top-0 z-30 border-b-4 border-gold/60">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-terracotta flex items-center justify-center text-white shadow-md border-2 border-gold">
+                    <i class="fa-solid fa-hat-chef text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-serif text-lg sm:text-xl font-bold tracking-wide text-gold leading-tight">
+                        İtalyan Usulü Tiramisu Ustası
+                    </h1>
+                    <p class="text-xs text-parchment/80">Fiziksel Etkileşimli & Sesli Mutfak Simülasyonu</p>
+                </div>
+            </div>
+
+            <!-- Progress Steps Pill -->
+            <div class="flex items-center gap-1.5 bg-mocha/80 px-3 py-1.5 rounded-full border border-gold/30">
+                <span class="text-xs font-semibold text-gold uppercase tracking-wider mr-1">Aşama:</span>
+                <span id="stageBadgeText" class="text-sm font-bold text-white">1 / 6</span>
+            </div>
+
+            <!-- Score & Controls -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="bg-mocha px-3.5 py-1.5 rounded-xl border border-gold/40 flex items-center gap-2">
+                    <i class="fa-solid fa-star text-gold"></i>
+                    <span class="text-xs text-parchment/80 hidden sm:inline">Lezzet Puanı:</span>
+                    <span id="liveScoreDisplay" class="font-bold text-white text-sm sm:text-base">100</span>
+                </div>
+
+                <button id="recipeModalBtn" class="bg-parchment/15 hover:bg-parchment/25 text-cream px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 border border-parchment/30" title="Tam Tarifi Gör">
+                    <i class="fa-solid fa-book-open text-gold"></i>
+                    <span class="hidden sm:inline">Tarif Defteri</span>
+                </button>
+
+                <button id="soundToggleBtn" class="w-9 h-9 rounded-xl bg-parchment/15 hover:bg-parchment/25 flex items-center justify-center text-gold transition border border-parchment/30" title="Sesi Aç/Kapat">
+                    <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step Progress Bar -->
+        <div class="w-full bg-mocha h-2 overflow-hidden">
+            <div id="topProgressBar" class="bg-gradient-to-r from-terracotta via-gold to-pistachio h-full transition-all duration-500" style="width: 16.6%"></div>
+        </div>
+    </header>
+
+    <!-- MAIN GAME CONTAINER -->
+    <main class="flex-grow w-full max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-6 flex flex-col gap-4">
+
+        <!-- CHEF TIP & STAGE HEADER BANNER -->
+        <section class="bg-white/95 border-2 border-gold/50 rounded-2xl p-4 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+            <div class="flex items-start sm:items-center gap-3.5 z-10">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-terracotta to-espresso text-white flex flex-col items-center justify-center shrink-0 shadow-md border-2 border-gold">
+                    <span class="text-[10px] uppercase tracking-wider font-bold text-gold">Adım</span>
+                    <span id="stepNumberCircle" class="text-xl sm:text-2xl font-serif font-extrabold leading-none">1</span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h2 id="stageTitle" class="font-serif text-xl sm:text-2xl font-bold text-espresso">
+                            Kahveyi Hazırla ve Soğut
+                        </h2>
+                        <span id="stageSubtitleBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-100 text-terracotta border border-terracotta/30">
+                            Püf Noktası: Oda Sıcaklığı
+                        </span>
+                    </div>
+                    <p id="chefTipText" class="text-xs sm:text-sm text-mocha/90 mt-1 leading-relaxed">
+                        1.5 su bardağı sert espressoyu geniş kaba dökün, isteğe bağlı likörü ekleyin ve kedidillerini hamurlaştırmaması için <strong>22°C oda sıcaklığına</strong> kadar soğutun!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Mini Stage Dots -->
+            <div id="stageDotsContainer" class="flex items-center gap-1.5 self-end sm:self-center shrink-0 z-10">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- INTERACTIVE KITCHEN WORKBENCH (STAGE VIEWPORT) -->
+        <section id="kitchenWorkbench" class="countertop rounded-3xl border-4 border-parchment p-4 sm:p-6 min-h-[430px] sm:min-h-[470px] flex flex-col justify-between relative overflow-hidden">
+            
+            <!-- Dynamic Feedback Toast inside Workbench -->
+            <div id="actionToast" class="pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-2 absolute top-4 left-1/2 -translate-x-1/2 z-20 bg-espresso text-gold px-4 py-2 rounded-full shadow-lg border border-gold text-xs sm:text-sm font-bold flex items-center gap-2">
+                <i class="fa-solid fa-sparkles"></i>
+                <span id="actionToastText">Harika gidiyorsun!</span>
+            </div>
+
+            <!-- Dynamic Stage Content injected here -->
+            <div id="stageViewport" class="flex-grow flex flex-col items-center justify-center w-full my-auto py-2">
+                <!-- Rendered by JavaScript -->
+            </div>
+
+            <!-- Bottom Stage Action / Next Step Bar -->
+            <div class="w-full pt-3 border-t border-espresso/10 flex flex-wrap items-center justify-between gap-3 mt-2">
+                <div class="flex items-center gap-2 text-xs sm:text-sm text-mocha font-medium">
+                    <i class="fa-solid fa-circle-info text-terracotta"></i>
+                    <span id="bottomHintText">Başlamak için Moka Pot'a tıklayarak kahveyi dökün.</span>
+                </div>
+
+                <button id="nextStageBtn" disabled class="px-6 py-2.5 rounded-xl font-bold text-sm sm:text-base flex items-center gap-2 transition-all shadow-md bg-gray-300 text-gray-500 cursor-not-allowed">
+                    <span>Sonraki Adıma Geç</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- RECIPE BOOK MODAL -->
+    <div id="recipeModal" class="fixed inset-0 bg-espresso/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cream border-4 border-gold rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl p-6 relative">
+            <button id="closeRecipeModalBtn" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-terracotta text-white flex items-center justify-center hover:bg-espresso transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4 pb-3 border-b-2 border-gold/40">
+                <i class="fa-solid fa-scroll text-2xl text-terracotta"></i>
+                <div>
+                    <h3 class="font-serif text-2xl font-bold text-espresso">Orijinal İtalyan Usulü Tiramisu Tarifi</h3>
+                    <p class="text-xs text-mocha">Tam Kıvamında Kedidili ve Labneli/Mascarponeli Tarif</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 text-sm">
+                <div class="bg-parchment/70 p-4 rounded-2xl border border-gold/30">
+                    <h4 class="font-bold text-terracotta mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-bowl-food"></i> 1. Kreması İçin:
+                    </h4>
+                    <ul class="space-y-1 text-espresso">
+                        <li>• <strong>Yumurta:</strong> 3 adet (Sarısı ve akı ayrı çırpılacak)</li>
+                        <li>• <strong>Toz Şeker:</strong> 4 yemek kaşığı</li>
+                        <li>• <strong>Labne Peyniri:</strong> 400 g (Suyu iyice süzülmüş)</li>
+                        <li>• <strong>Vanilya:</strong> 1 paket / 1 çay kaşığı</li>
+                        <li>• <strong>Tuz:</strong> 1 tutam (Yumurta akları için)</li>
+                    </ul>
+                </div>
+                <div class="bg-parchment/70 p-4 rounded-2xl border border-gold/30">
+                    <h4 class="font-bold text-terracotta mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-mug-hot"></i> 2. Islatmak & Üzeri İçin:
+                    </h4>
+                    <ul class="space-y-1 text-espresso">
+                        <li>• <strong>Kedidili Bisküvi:</strong> 1 paket</li>
+                        <li>• <strong>Espresso / Sert Kahve:</strong> 1.5 su bardağı (Soğutulmuş)</li>
+                        <li>• <strong>Kahve Likörü (İsteğe bağlı):</strong> 1-2 yemek kaşığı</li>
+                        <li>• <strong>Kakao:</strong> 2-3 yemek kaşığı (Hakiki toz kakao)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="space-y-2.5 text-xs sm:text-sm text-espresso leading-relaxed">
+                <p><strong>1. Kahveyi Hazırlayın:</strong> 1.5 su bardağı sert kahveyi demleyin, likörü ekleyip oda sıcaklığına gelene kadar soğutun.</p>
+                <p><strong>2. Yumurta Sarısı ve Şekeri Çırpın:</strong> Sarıları ve akları ayırın. Sarıları 4 kaşık şekerle açık sarı, kremsi olana dek yüksek devirde çırpın.</p>
+                <p><strong>3. Labneyi Ekleyin:</strong> Suyu süzülmüş 400g labne ve vanilyayı ekleyip düşük devirde pürüzsüz olana kadar kısaca karıştırın.</p>
+                <p><strong>4. Yumurta Aklarını Köpürtün:</strong> Ayrı kapta yumurta aklarını bir tutam tuzla kar gibi sertleşip tepecik olana dek çırpın.</p>
+                <p><strong>5. Kremayı Birleştirin:</strong> Köpüren akları spatulayla alttan üste doğru nazikçe katlayarak söndürmeden labneli karışıma yedirin.</p>
+                <p><strong>6. Kedidillerini Islatıp Katları Oluşturun:</strong> Kedidillerini soğuk kahveye hızlıca batırıp çıkarın (bekletmeyin!). İlk katı dizin, kremanın yarısını yayın. İkinci kat kedidili ve kalan kremayı sıvayın.</p>
+                <p><strong>7. Dinlendirin & Servis Edin:</strong> Buzdolabında en az 4-5 saat dinlendirin. Servis öncesi süzgeçle bol toz kakao eleyip dilimleyin.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="w-full py-3 text-center text-xs text-mocha/70 border-t border-gold/20 bg-parchment/50">
+        <span>İtalyan Pastanesi Atölyesi • Afiyet Olsun! (Buon Appetito)</span>
+    </footer>
+
+    <!-- GAME LOGIC & INTERACTIVE AUDIO/GRAPHICS -->
+    <script>
+        /**************************************************************
+         * ADVANCED WEB AUDIO API SYNTHESIZER (Continuous & Realistic)
+         **************************************************************/
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.muted = false;
+                this.mixerNodes = null;
+                this.pourNodes = null;
+                this.fanNodes = null;
+                this.noiseBuffer = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) {
+                        this.ctx = new AudioCtx();
+                        this.createNoiseBuffer();
+                    }
+                }
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            createNoiseBuffer() {
+                if (!this.ctx) return;
+                const bufferSize = this.ctx.sampleRate * 2;
+                const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                this.noiseBuffer = buffer;
+            }
+
+            // Realistic Egg Cracking Sound (Sharp snap + shell crunch)
+            playEggCrack() {
+                if (this.muted) return;
+                this.init();
+                if (!this.ctx || !this.noiseBuffer) return;
+
+                const now = this.ctx.currentTime;
+                // 1. Sharp shell snap impulse
+                const snapOsc = this.ctx.createOscillator();
+                const snapGain = this.ctx.createGain();
+                snapOsc.type = 'triangle';
+                snapOsc.frequency.setValueAtTime(1100, now);
+                snapOsc.frequency.exponentialRampToValueAtTime(180, now + 0.055);
+                snapGain.gain.setValueAtTime(0.35, now);
+                snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+                snapOsc.connect(snapGain);
+                snapGain.connect(this.ctx.destination);
+                snapOsc.start(now);
+                snapOsc.stop(now + 0.06);
+
+                // 2. Shell crunch bursts (filtered white noise)
+                [0, 0.045, 0.09].forEach((offset, idx) => {
+                    const noise = this.ctx.createBufferSource();
+                    noise.buffer = this.noiseBuffer;
+                    const filter = this.ctx.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.frequency.setValueAtTime(2200 - idx * 350, now + offset);
+                    filter.Q.setValueAtTime(3.0, now + offset);
+
+                    const gain = this.ctx.createGain();
+                    gain.gain.setValueAtTime(0.28, now + offset);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.045);
+
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    noise.start(now + offset);
+                    noise.stop(now + offset + 0.05);
+                });
+
+                // 3. Soft liquid plop into bowl
+                const plopOsc = this.ctx.createOscillator();
+                const plopGain = this.ctx.createGain();
+                plopOsc.type = 'sine';
+                plopOsc.frequency.setValueAtTime(240, now + 0.16);
+                plopOsc.frequency.exponentialRampToValueAtTime(480, now + 0.28);
+                plopGain.gain.setValueAtTime(0.18, now + 0.16);
+                plopGain.gain.exponentialRampToValueAtTime(0.001, now + 0.29);
+                plopOsc.connect(plopGain);
+                plopGain.connect(this.ctx.destination);
+                plopOsc.start(now + 0.16);
+                plopOsc.stop(now + 0.3);
+            }
+
+            // Trash Can Shell Disposal Sound (Hollow thud + shell crumple)
+            playTrashToss() {
+                if (this.muted) return;
+                this.init();
+                if (!this.ctx || !this.noiseBuffer) return;
+
+                const now = this.ctx.currentTime;
+                // Lid clack & bin thud
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(160, now);
+                osc.frequency.exponentialRampToValueAtTime(65, now + 0.16);
+                gain.gain.setValueAtTime(0.32, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.17);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.18);
+
+                // Shell rattle inside bin
+                const noise = this.ctx.createBufferSource();
+                noise.buffer = this.noiseBuffer;
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.setValueAtTime(1600, now + 0.04);
+                const nGain = this.ctx.createGain();
+                nGain.gain.setValueAtTime(0.22, now + 0.04);
+                nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+                noise.connect(filter);
+                filter.connect(nGain);
+                nGain.connect(this.ctx.destination);
+                noise.start(now + 0.04);
+                noise.stop(now + 0.19);
+            }
+
+            // Continuous Electric Hand Mixer Motor & Liquid Whipping Sound
+            startMixerSound(rpmMode = 'high') {
+                if (this.muted) return;
+                this.init();
+                if (!this.ctx || this.mixerNodes) return;
+
+                const now = this.ctx.currentTime;
+                const baseFreq = rpmMode === 'low' ? 105 : 155;
+
+                // Motor hum oscillator 1 (Sawtooth)
+                const motorOsc1 = this.ctx.createOscillator();
+                motorOsc1.type = 'sawtooth';
+                motorOsc1.frequency.setValueAtTime(baseFreq, now);
+
+                // Motor harmonic oscillator 2 (Square)
+                const motorOsc2 = this.ctx.createOscillator();
+                motorOsc2.type = 'square';
+                motorOsc2.frequency.setValueAtTime(baseFreq * 2.02, now);
+
+                // LFO for rapid beater pulsing (whir-whir-whir)
+                const lfo = this.ctx.createOscillator();
+                lfo.frequency.setValueAtTime(rpmMode === 'low' ? 11 : 18, now);
+                const lfoGain = this.ctx.createGain();
+                lfoGain.gain.setValueAtTime(22, now);
+                lfo.connect(motorOsc1.frequency);
+
+                // Filter for warm mechanical motor tone
+                const motorFilter = this.ctx.createBiquadFilter();
+                motorFilter.type = 'lowpass';
+                motorFilter.frequency.setValueAtTime(rpmMode === 'low' ? 680 : 1150, now);
+
+                // Cream splashing noise
+                const splashNoise = this.ctx.createBufferSource();
+                splashNoise.buffer = this.noiseBuffer;
+                splashNoise.loop = true;
+                const splashFilter = this.ctx.createBiquadFilter();
+                splashFilter.type = 'bandpass';
+                splashFilter.frequency.setValueAtTime(950, now);
+                splashFilter.Q.setValueAtTime(1.8, now);
+                const splashGain = this.ctx.createGain();
+                splashGain.gain.setValueAtTime(0.06, now);
+
+                // Master mixer gain
+                const masterGain = this.ctx.createGain();
+                masterGain.gain.setValueAtTime(0.01, now);
+                masterGain.gain.linearRampToValueAtTime(0.11, now + 0.06);
+
+                motorOsc1.connect(motorFilter);
+                motorOsc2.connect(motorFilter);
+                motorFilter.connect(masterGain);
+
+                splashNoise.connect(splashFilter);
+                splashFilter.connect(splashGain);
+                splashGain.connect(masterGain);
+
+                masterGain.connect(this.ctx.destination);
+
+                motorOsc1.start(now);
+                motorOsc2.start(now);
+                lfo.start(now);
+                splashNoise.start(now);
+
+                this.mixerNodes = { motorOsc1, motorOsc2, lfo, splashNoise, masterGain };
+            }
+
+            stopMixerSound() {
+                if (!this.mixerNodes || !this.ctx) return;
+                const now = this.ctx.currentTime;
+                try {
+                    this.mixerNodes.masterGain.gain.setValueAtTime(this.mixerNodes.masterGain.gain.value, now);
+                    this.mixerNodes.masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+                    const nodes = this.mixerNodes;
+                    this.mixerNodes = null;
+                    setTimeout(() => {
+                        try {
+                            nodes.motorOsc1.stop();
+                            nodes.motorOsc2.stop();
+                            nodes.lfo.stop();
+                            nodes.splashNoise.stop();
+                        } catch (e) {}
+                    }, 60);
+                } catch (e) {
+                    this.mixerNodes = null;
+                }
+            }
+
+            // Continuous Liquid Pouring / Soaking Sound
+            startPourSound() {
+                if (this.muted) return;
+                this.init();
+                if (!this.ctx || !this.noiseBuffer || this.pourNodes) return;
+
+                const now = this.ctx.currentTime;
+                const noise = this.ctx.createBufferSource();
+                noise.buffer = this.noiseBuffer;
+                noise.loop = true;
+
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.setValueAtTime(650, now);
+                filter.Q.setValueAtTime(2.5, now);
+
+                const gain = this.ctx.createGain();
+                gain.gain.setValueAtTime(0.08, now);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+                noise.start(now);
+
+                this.pourNodes = { noise, filter, gain };
+            }
+
+            stopPourSound() {
+                if (!this.pourNodes) return;
+                try {
+                    this.pourNodes.noise.stop();
+                } catch (e) {}
+                this.pourNodes = null;
+            }
+
+            // Continuous Cooling Fan Whoosh Sound
+            startFanSound() {
+                if (this.muted) return;
+                this.init();
+                if (!this.ctx || !this.noiseBuffer || this.fanNodes) return;
+
+                const now = this.ctx.currentTime;
+                const noise = this.ctx.createBufferSource();
+                noise.buffer = this.noiseBuffer;
+                noise.loop = true;
+
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(420, now);
+
+                const gain = this.ctx.createGain();
+                gain.gain.setValueAtTime(0.09, now);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+                noise.start(now);
+
+                this.fanNodes = { noise, gain };
+            }
+
+            stopFanSound() {
+                if (!this.fanNodes) return;
+                try {
+                    this.fanNodes.noise.stop();
+                } catch (e) {}
+                this.fanNodes = null;
+            }
+
+            // Sifting Cocoa / Sugar Granules Rustle Sound
+            playSiftSound() {
+                if (this.muted) return;
+                this.init();
+                if (!this.ctx || !this.noiseBuffer) return;
+
+                const now = this.ctx.currentTime;
+                const noise = this.ctx.createBufferSource();
+                noise.buffer = this.noiseBuffer;
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'highpass';
+                filter.frequency.setValueAtTime(2800, now);
+
+                const gain = this.ctx.createGain();
+                gain.gain.setValueAtTime(0.11, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+                noise.start(now);
+                noise.stop(now + 0.095);
+            }
+
+            playPop(freq = 520, duration = 0.09) {
+                if (this.muted) return;
+                this.init();
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(freq * 1.4, this.ctx.currentTime + duration);
+                gain.gain.setValueAtTime(0.16, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + duration);
+            }
+
+            playSuccessChord() {
+                if (this.muted) return;
+                this.init();
+                if (!this.ctx) return;
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((note, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    const startTime = this.ctx.currentTime + idx * 0.07;
+                    osc.frequency.setValueAtTime(note, startTime);
+                    gain.gain.setValueAtTime(0.15, startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(startTime);
+                    osc.stop(startTime + 0.35);
+                });
+            }
+
+            playError() {
+                if (this.muted) return;
+                this.init();
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+                osc.frequency.linearRampToValueAtTime(130, this.ctx.currentTime + 0.22);
+                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.22);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.22);
+            }
+
+            stopAllContinuous() {
+                this.stopMixerSound();
+                this.stopPourSound();
+                this.stopFanSound();
+            }
+        }
+
+        const sfx = new SoundEngine();
+
+        /**************************************************************
+         * GAME STAGES & STATE
+         **************************************************************/
+        const STAGES = [
+            {
+                id: 1,
+                title: "Kahve Hazırlama ve Fanla Soğutma",
+                badge: "Püf Noktası: 22°C Oda Sıcaklığı",
+                tip: "Moka Pot'a basılı tutarak sıcak espressoyu geniş kaba dökün, isteğe bağlı likörü ekleyin ve vantilatöre basılı tutarak kahveyi 85°C'den 22°C'ye soğutun!"
+            },
+            {
+                id: 2,
+                title: "Yumurtaları Kır ve Kabukları Çöpe At",
+                badge: "Hijyenik Mutfak Kuralları",
+                tip: "3 yumurtayı tek tek kırarak sarısını ve akını iki ayrı kaseye ayırın. Kırılan yumurta kabuklarını sürükleyip Çöp Kutusuna atmadan sıradaki yumurtaya geçemezsiniz!"
+            },
+            {
+                id: 3,
+                title: "Şeker, El Mikseriyle Çırpma ve Labne",
+                badge: "Basılı Tut: Elektrikli El Mikseri",
+                tip: "Yumurta sarılarına 4 kaşık şeker dökün. Elektrikli El Mikserine BASILI TUTARAK krema kıvamına gelene dek çırpın, ardından 400g Labne ve vanilyayı ekleyip tekrar çırpın!"
+            },
+            {
+                id: 4,
+                title: "Yumurta Akı Köpürtme ve Spatula ile Katlama",
+                badge: "Kar Köpüğü & Nazik Katlama",
+                tip: "Yumurta aklarına bir tutam tuz atıp El Mikserine basılı tutarak kar gibi köpürtün. Ardından Spatula ile alttan üste doğru köpüğü söndürmeden labneli kremaya katlayın."
+            },
+            {
+                id: 5,
+                title: "Kedidili Islatma ve Borcama Kat Dizimi",
+                badge: "1 Saniye Islatma Kuralı",
+                tip: "Kedidillerini soğuk kahveye basılı tutarak batırın ve yeşil bölgedeyken bırakıp borcama dizin. Üzerine spatula ile krema sıvayıp 2. katı tamamlayın!"
+            },
+            {
+                id: 6,
+                title: "Buzdolabında Dinlendir ve Süzgeçle Kakao Serp",
+                badge: "Son Dokunuş & Servis",
+                tip: "Tiramisuyu buzdolabında 5 saat dinlendirin. Ardından Kakao Süzgecini tiramisunun üzerinde sağa sola gezdirip sallayarak her yerine toz kakao eleyin ve dilimleyin!"
+            }
+        ];
+
+        let gameState = {
+            currentStage: 0,
+            score: 100,
+            hasBonusLiqueur: false,
+            foldingQuality: 100,
+            coffeeDipQuality: 100,
+            cocoaCoverage: 0,
+            activeIntervals: []
+        };
+
+        function clearStageTimers() {
+            sfx.stopAllContinuous();
+            gameState.activeIntervals.forEach(id => clearInterval(id));
+            gameState.activeIntervals = [];
+        }
+
+        function showToast(msg, isWarning = false) {
+            const toast = document.getElementById('actionToast');
+            const text = document.getElementById('actionToastText');
+            text.textContent = msg;
+            toast.className = `pointer-events-none opacity-100 transition-all duration-300 transform translate-y-0 absolute top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full shadow-lg border text-xs sm:text-sm font-bold flex items-center gap-2 ${
+                isWarning ? 'bg-red-800 text-white border-red-300' : 'bg-espresso text-gold border-gold'
+            }`;
+            clearTimeout(window.toastTimeout);
+            window.toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-2');
+            }, 2400);
+        }
+
+        function updateScore(delta) {
+            gameState.score = Math.max(40, Math.min(100, Math.round(gameState.score + delta)));
+            const el = document.getElementById('liveScoreDisplay');
+            el.textContent = gameState.score;
+            el.classList.add('scale-125', 'text-gold');
+            setTimeout(() => el.classList.remove('scale-125', 'text-gold'), 250);
+        }
+
+        function setBottomHint(text) {
+            document.getElementById('bottomHintText').innerHTML = text;
+        }
+
+        function enableNextStageButton(label = "Sonraki Adıma Geç") {
+            const btn = document.getElementById('nextStageBtn');
+            btn.disabled = false;
+            btn.innerHTML = `<span>${label}</span> <i class="fa-solid fa-arrow-right"></i>`;
+            btn.className = "btn-action px-6 py-2.5 rounded-xl font-bold text-sm sm:text-base flex items-center gap-2 transition-all shadow-lg bg-gradient-to-r from-terracotta to-espresso text-white border-2 border-gold cursor-pointer";
+            sfx.playSuccessChord();
+        }
+
+        function disableNextStageButton() {
+            const btn = document.getElementById('nextStageBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<span>Adımı Tamamlayın</span> <i class="fa-solid fa-lock text-xs"></i>`;
+            btn.className = "px-6 py-2.5 rounded-xl font-bold text-sm sm:text-base flex items-center gap-2 transition-all bg-gray-300 text-gray-500 cursor-not-allowed";
+        }
+
+        function renderHeaderAndDots() {
+            const st = STAGES[gameState.currentStage];
+            document.getElementById('stageBadgeText').textContent = `${st.id} / ${STAGES.length}`;
+            document.getElementById('stepNumberCircle').textContent = st.id;
+            document.getElementById('stageTitle').textContent = st.title;
+            document.getElementById('stageSubtitleBadge').textContent = st.badge;
+            document.getElementById('chefTipText').textContent = st.tip;
+            document.getElementById('topProgressBar').style.width = `${(st.id / STAGES.length) * 100}%`;
+
+            const dotsContainer = document.getElementById('stageDotsContainer');
+            dotsContainer.innerHTML = '';
+            STAGES.forEach((item, idx) => {
+                const dot = document.createElement('div');
+                if (idx < gameState.currentStage) {
+                    dot.className = "w-6 h-6 rounded-full bg-pistachio text-white flex items-center justify-center text-xs font-bold shadow-sm";
+                    dot.innerHTML = '<i class="fa-solid fa-check"></i>';
+                } else if (idx === gameState.currentStage) {
+                    dot.className = "w-7 h-7 rounded-full bg-terracotta text-white flex items-center justify-center text-xs font-bold ring-4 ring-gold/40 shadow";
+                    dot.textContent = idx + 1;
+                } else {
+                    dot.className = "w-6 h-6 rounded-full bg-parchment text-mocha/50 flex items-center justify-center text-xs font-bold border border-mocha/20";
+                    dot.textContent = idx + 1;
+                }
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        // Reusable SVG Electric Hand Mixer Markup
+        function getHandMixerSVG(idPrefix) {
+            return `
+                <div id="${idPrefix}_mixerContainer" class="relative flex flex-col items-center select-none cursor-pointer group transition-transform duration-150">
+                    <!-- Mixer Motor Body SVG -->
+                    <svg width="130" height="115" viewBox="0 0 130 115" class="drop-shadow-lg">
+                        <!-- Ergonomic Handle -->
+                        <path d="M35 18 C35 6, 95 6, 102 22 L102 36 C92 36, 88 20, 48 20 Z" fill="#2C1810" />
+                        <!-- Main Retro Italian Body -->
+                        <rect x="20" y="25" width="90" height="46" rx="20" fill="#FDF8F2" stroke="#C85A32" stroke-width="3" />
+                        <!-- Terracotta Racing Stripe & Vents -->
+                        <rect x="24" y="42" width="82" height="12" rx="4" fill="#C85A32" />
+                        <line x1="36" y1="33" x2="50" y2="33" stroke="#6F4E37" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="36" y1="61" x2="50" y2="61" stroke="#6F4E37" stroke-width="2.5" stroke-linecap="round"/>
+                        <!-- Power Indicator LED -->
+                        <circle id="${idPrefix}_led" cx="92" cy="34" r="4.5" fill="#9CA3AF" stroke="#2C1810" stroke-width="1.5" />
+                        <!-- Dual Metal Beaters -->
+                        <g class="beater-whirl" style="transform-box: fill-box;">
+                            <line x1="50" y1="71" x2="50" y2="104" stroke="#64748B" stroke-width="3.5" />
+                            <ellipse cx="50" cy="98" rx="9" ry="13" fill="none" stroke="#475569" stroke-width="2.5" />
+                            <ellipse cx="50" cy="98" rx="4" ry="13" fill="none" stroke="#94A3B8" stroke-width="2" />
+                        </g>
+                        <g class="beater-whirl" style="transform-box: fill-box;">
+                            <line x1="78" y1="71" x2="78" y2="104" stroke="#64748B" stroke-width="3.5" />
+                            <ellipse cx="78" cy="98" rx="9" ry="13" fill="none" stroke="#475569" stroke-width="2.5" />
+                            <ellipse cx="78" cy="98" rx="4" ry="13" fill="none" stroke="#94A3B8" stroke-width="2" />
+                        </g>
+                    </svg>
+                    <div id="${idPrefix}_holdBadge" class=" -mt-2 px-3 py-1 rounded-full bg-terracotta text-white font-extrabold text-[11px] shadow-md border border-gold flex items-center gap-1.5 group-hover:scale-105 transition">
+                        <i class="fa-solid fa-hand-pointer"></i>
+                        <span>MİKSERE BASILI TUT</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadStage(index) {
+            clearStageTimers();
+            gameState.currentStage = index;
+            renderHeaderAndDots();
+            disableNextStageButton();
+
+            const viewport = document.getElementById('stageViewport');
+            viewport.innerHTML = '';
+
+            switch (index) {
+                case 0: renderStage1Coffee(viewport); break;
+                case 1: renderStage2EggsAndTrash(viewport); break;
+                case 2: renderStage3YolksAndLabnehMixer(viewport); break;
+                case 3: renderStage4WhitesMixerAndFold(viewport); break;
+                case 4: renderStage5DipAndLayer(viewport); break;
+                case 5: renderStage6FridgeAndCocoaSieve(viewport); break;
+            }
+        }
+
+        /* ============================================================
+         * ADIM 1: KAHVE DÖKME (BASILI TUT) VE PERVANEYLE SOĞUTMA
+         * ============================================================ */
+        function renderStage1Coffee(viewport) {
+            let coffeeFill = 0; // 0 to 100
+            let addedLiqueur = false;
+            let temperature = 85; // 85°C down to 22°C
+            let coolingDone = false;
+            let pourInterval = null;
+            let fanInterval = null;
+
+            setBottomHint("Sıcak espressoyu kaba dökmek için <strong>Moka Pot'un üzerine BASILI TUTUN</strong>.");
+
+            viewport.innerHTML = `
+                <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <!-- Left: Interactive Moka Pot (Hold to Pour) & Liqueur Bottle -->
+                    <div class="flex flex-row md:flex-col items-center justify-center gap-4">
+                        <div id="mokaPotCard" class="btn-action w-44 bg-white hover:bg-amber-50 border-2 border-espresso rounded-2xl p-3.5 shadow-md flex flex-col items-center gap-1.5 cursor-pointer select-none">
+                            <div id="mokaPotVisual" class="text-4xl transition-transform duration-200">☕</div>
+                            <span class="font-bold text-sm text-espresso">Sıcak Moka Pot</span>
+                            <div class="w-full bg-parchment h-2 rounded-full overflow-hidden border border-mocha/20">
+                                <div id="pourBar" class="bg-espresso h-full transition-all duration-100" style="width: 0%"></div>
+                            </div>
+                            <span id="espressoStatus" class="text-[11px] px-2.5 py-0.5 rounded-full bg-terracotta text-white font-bold">Basılı Tut & Dök (%0)</span>
+                        </div>
+
+                        <button id="pourLiqueurBtn" disabled class="w-44 bg-white/70 border-2 border-dashed border-mocha/40 rounded-2xl p-3 shadow-sm flex flex-col items-center gap-1 opacity-60 transition">
+                            <div class="text-2xl">🍾</div>
+                            <span class="font-bold text-xs text-espresso">Amaretto Likörü</span>
+                            <span id="liqueurStatus" class="text-[11px] px-2 py-0.5 rounded-full bg-parchment text-mocha">Önce Kahveyi Doldur</span>
+                        </button>
+                    </div>
+
+                    <!-- Center: Pour Stream, Rising Steam & Wide Coffee Dish -->
+                    <div class="flex flex-col items-center justify-center relative py-4">
+                        <!-- Animated Liquid Stream from top -->
+                        <div id="coffeeStream" class="w-3 h-24 bg-gradient-to-b from-espresso to-cocoa rounded-full opacity-0 transition-opacity duration-150 -mb-4 z-10"></div>
+
+                        <!-- Steam & Wind Particles -->
+                        <div id="steamContainer" class="h-14 flex items-center justify-center gap-5 opacity-0 transition-opacity duration-300 relative">
+                            <div class="w-2.5 h-9 bg-gray-400/50 rounded-full steam-particle" style="animation-delay: 0s"></div>
+                            <div class="w-3 h-11 bg-gray-400/50 rounded-full steam-particle" style="animation-delay: 0.4s"></div>
+                            <div class="w-2.5 h-9 bg-gray-400/50 rounded-full steam-particle" style="animation-delay: 0.8s"></div>
+                        </div>
+
+                        <!-- Wind Lines Overlay when fan is running -->
+                        <div id="windOverlay" class="hidden absolute top-14 right-4 flex-col gap-2 pointer-events-none z-20">
+                            <div class="w-16 h-1 bg-sky-400/70 rounded-full wind-line"></div>
+                            <div class="w-24 h-1 bg-sky-300/80 rounded-full wind-line" style="animation-delay: 0.2s"></div>
+                            <div class="w-14 h-1 bg-sky-400/70 rounded-full wind-line" style="animation-delay: 0.4s"></div>
+                        </div>
+
+                        <!-- Wide Glass Dish -->
+                        <div class="w-64 h-28 glass-bowl rounded-b-3xl rounded-t-lg relative overflow-hidden flex items-end justify-center p-2">
+                            <div id="coffeeLiquid" class="w-full h-0 bg-gradient-to-t from-espresso via-mocha to-cocoa rounded-b-2xl transition-all duration-150 relative flex items-center justify-center">
+                                <span id="liquidLabel" class="text-xs font-bold text-gold/90 opacity-0 transition">1.5 Bardak Espresso</span>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-mocha mt-2">Geniş Kedidili Islatma Kabı</span>
+                    </div>
+
+                    <!-- Right: Spinning Fan & Live Thermometer -->
+                    <div class="flex flex-col items-center justify-center bg-parchment/90 p-4 rounded-2xl border-2 border-gold/40 gap-3 shadow-sm">
+                        <div class="flex items-center gap-4 w-full justify-center">
+                            <!-- SVG Spinning Fan -->
+                            <div class="w-16 h-16 rounded-full bg-sky-100 border-4 border-sky-400 flex items-center justify-center shadow-inner">
+                                <i id="fanBladeIcon" class="fa-solid fa-fan text-3xl text-sky-700 transition-transform"></i>
+                            </div>
+                            <!-- Thermometer -->
+                            <div class="w-5 h-28 bg-white rounded-full p-0.5 border-2 border-espresso flex flex-col justify-end">
+                                <div id="thermoBar" class="w-full bg-gradient-to-t from-sky-400 via-amber-500 to-red-600 rounded-full transition-all duration-150" style="height: 92%"></div>
+                            </div>
+                            <div class="text-left">
+                                <div class="text-[11px] text-mocha font-bold uppercase">Sıcaklık</div>
+                                <div id="tempValueText" class="text-2xl font-extrabold text-red-600">85°C</div>
+                                <div class="text-[11px] text-pistachio font-bold">Hedef: 22°C</div>
+                            </div>
+                        </div>
+
+                        <button id="coolFanBtn" disabled class="w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm bg-gray-300 text-gray-500 flex items-center justify-center gap-2 transition shadow select-none">
+                            <i class="fa-solid fa-wind"></i>
+                            <span>Vantilatöre Basılı Tut (Soğut)</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            const mokaPotCard = document.getElementById('mokaPotCard');
+            const mokaPotVisual = document.getElementById('mokaPotVisual');
+            const coffeeStream = document.getElementById('coffeeStream');
+            const coffeeLiquid = document.getElementById('coffeeLiquid');
+            const pourBar = document.getElementById('pourBar');
+            const steamContainer = document.getElementById('steamContainer');
+            const pourLiqueurBtn = document.getElementById('pourLiqueurBtn');
+            const coolFanBtn = document.getElementById('coolFanBtn');
+            const fanBladeIcon = document.getElementById('fanBladeIcon');
+            const windOverlay = document.getElementById('windOverlay');
+            const thermoBar = document.getElementById('thermoBar');
+            const tempValueText = document.getElementById('tempValueText');
+
+            function startPouringCoffee(e) {
+                if (e && e.cancelable) e.preventDefault();
+                if (coffeeFill >= 100 || pourInterval) return;
+                mokaPotVisual.style.transform = "rotate(-42deg) translateY(4px)";
+                coffeeStream.classList.remove('opacity-0');
+                sfx.startPourSound();
+
+                pourInterval = setInterval(() => {
+                    coffeeFill = Math.min(100, coffeeFill + 5);
+                    pourBar.style.width = `${coffeeFill}%`;
+                    coffeeLiquid.style.height = `${(coffeeFill / 100) * 72}%`;
+                    document.getElementById('espressoStatus').textContent = `Dökülüyor... (%${coffeeFill})`;
+
+                    if (coffeeFill > 20) {
+                        steamContainer.classList.remove('opacity-0');
+                        document.getElementById('liquidLabel').classList.remove('opacity-0');
+                    }
+
+                    if (coffeeFill >= 100) {
+                        stopPouringCoffee();
+                        mokaPotCard.classList.remove('btn-action');
+                        mokaPotCard.classList.add('opacity-60');
+                        document.getElementById('espressoStatus').textContent = "Tamamlandı ✓";
+                        document.getElementById('espressoStatus').className = "text-[11px] px-2.5 py-0.5 rounded-full bg-pistachio text-white font-bold";
+
+                        pourLiqueurBtn.disabled = false;
+                        pourLiqueurBtn.className = "w-44 bg-white hover:bg-amber-50 border-2 border-gold rounded-2xl p-3 shadow-md flex flex-col items-center gap-1 cursor-pointer transition";
+                        document.getElementById('liqueurStatus').textContent = "Tıkla & Ekle (+Lezzet)";
+
+                        coolFanBtn.disabled = false;
+                        coolFanBtn.className = "btn-action w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm bg-sky-600 hover:bg-sky-700 text-white flex items-center justify-center gap-2 transition shadow-md cursor-pointer select-none";
+                        showToast("Sıcak kahve döküldü! Şimdi vantilatöre basılı tutarak 22°C'ye soğutun.");
+                        setBottomHint("İsterseniz <strong>Amaretto Likörü</strong> ekleyin, ardından <strong>Vantilatöre Basılı Tut</strong> butonuna basılı tutarak kahveyi soğutun!");
+                    }
+                }, 70);
+            }
+
+            function stopPouringCoffee() {
+                if (pourInterval) {
+                    clearInterval(pourInterval);
+                    pourInterval = null;
+                }
+                mokaPotVisual.style.transform = "rotate(0deg)";
+                coffeeStream.classList.add('opacity-0');
+                sfx.stopPourSound();
+            }
+
+            mokaPotCard.addEventListener('mousedown', startPouringCoffee);
+            mokaPotCard.addEventListener('touchstart', startPouringCoffee);
+            window.addEventListener('mouseup', stopPouringCoffee);
+            window.addEventListener('touchend', stopPouringCoffee);
+
+            pourLiqueurBtn.addEventListener('click', () => {
+                if (coffeeFill < 100 || addedLiqueur) return;
+                addedLiqueur = true;
+                gameState.hasBonusLiqueur = true;
+                sfx.playPop(640, 0.12);
+                coffeeLiquid.style.height = "84%";
+                document.getElementById('liquidLabel').textContent = "Espresso + Amaretto ✨";
+                pourLiqueurBtn.disabled = true;
+                pourLiqueurBtn.classList.add('opacity-60');
+                document.getElementById('liqueurStatus').textContent = "Aroma Eklendi ✓";
+                showToast("Nefis! İtalyan Amaretto likörü kahveye eklendi.");
+            });
+
+            function startFanCooling(e) {
+                if (e && e.cancelable) e.preventDefault();
+                if (coffeeFill < 100 || coolingDone || fanInterval) return;
+                fanBladeIcon.classList.add('fa-spin');
+                windOverlay.classList.remove('hidden');
+                windOverlay.classList.add('flex');
+                sfx.startFanSound();
+
+                fanInterval = setInterval(() => {
+                    temperature = Math.max(22, temperature - 3);
+                    const pct = Math.max(18, ((temperature - 15) / 75) * 100);
+                    thermoBar.style.height = `${pct}%`;
+                    tempValueText.textContent = `${temperature}°C`;
+                    steamContainer.style.opacity = Math.max(0, (temperature - 22) / 63).toString();
+
+                    if (temperature <= 42) {
+                        tempValueText.className = "text-2xl font-extrabold text-amber-600";
+                    }
+                    if (temperature <= 22) {
+                        stopFanCooling();
+                        coolingDone = true;
+                        tempValueText.className = "text-xl font-extrabold text-pistachio";
+                        tempValueText.textContent = "22°C (İdeal)";
+                        coolFanBtn.disabled = true;
+                        coolFanBtn.className = "w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm bg-pistachio text-white flex items-center justify-center gap-2 shadow";
+                        coolFanBtn.innerHTML = `<i class="fa-solid fa-check"></i> <span>Kahve 22°C Oda Sıcaklığında!</span>`;
+                        showToast("Mükemmel! Kahve oda sıcaklığına soğudu.");
+                        setBottomHint("Kahvemiz hazır! Yumurtaları kırıp kabuklarını çöpe atmak için <strong>Sonraki Adıma Geçin</strong>.");
+                        enableNextStageButton();
+                    }
+                }, 90);
+            }
+
+            function stopFanCooling() {
+                if (fanInterval) {
+                    clearInterval(fanInterval);
+                    fanInterval = null;
+                }
+                if (fanBladeIcon) fanBladeIcon.classList.remove('fa-spin');
+                if (windOverlay) {
+                    windOverlay.classList.add('hidden');
+                    windOverlay.classList.remove('flex');
+                }
+                sfx.stopFanSound();
+            }
+
+            coolFanBtn.addEventListener('mousedown', startFanCooling);
+            coolFanBtn.addEventListener('touchstart', startFanCooling);
+            window.addEventListener('mouseup', stopFanCooling);
+            window.addEventListener('touchend', stopFanCooling);
+        }
+
+        /* ============================================================
+         * ADIM 2: YUMURTA KIRMA VE KABUKLARI ÇÖPE ATMA MEKANİĞİ
+         * ============================================================ */
+        function renderStage2EggsAndTrash(viewport) {
+            let crackedCount = 0;
+            let trashedCount = 0;
+            let waitingForTrash = false; // Must throw current shell into trash before cracking next egg!
+
+            setBottomHint("<strong>1. Yumurtaya tıklayın</strong> (veya kaseye sürükleyin) ve kırın; ardından kalan <strong>kabukları Çöp Kutusuna sürükleyip atın!</strong>");
+
+            viewport.innerHTML = `
+                <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                    <!-- Column 1: Egg Carton with 3 Whole Eggs -->
+                    <div class="bg-parchment/90 p-4 rounded-2xl border-2 border-gold/50 flex flex-col items-center gap-3 shadow-sm">
+                        <span class="text-xs font-extrabold uppercase text-espresso">Taze Çiftlik Yumurtası</span>
+                        <div class="flex md:flex-col gap-3">
+                            ${[1, 2, 3].map(i => `
+                                <button id="wholeEgg_${i}" data-egg="${i}" draggable="true" class="${i === 1 ? 'btn-action' : 'opacity-50 cursor-not-allowed'} w-28 py-2.5 px-3 rounded-2xl bg-gradient-to-b from-amber-50 to-amber-200 border-2 border-amber-700/40 shadow flex items-center justify-center gap-2 font-bold text-xs text-espresso transition">
+                                    <span class="text-xl">🥚</span>
+                                    <span>${i}. Yumurta</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                        <span id="eggRuleHint" class="text-[11px] text-terracotta font-bold text-center">
+                            Kırmak için sıradaki yumurtaya tıklayın!
+                        </span>
+                    </div>
+
+                    <!-- Column 2 & 3: Cracking Zone + Two Separation Bowls + Active Broken Shell -->
+                    <div id="eggCrackDropZone" class="md:col-span-2 bg-white/80 p-4 rounded-3xl border-2 border-gold/40 flex flex-col items-center justify-between min-h-[290px] relative">
+                        <!-- Top: Active Cracking / Draggable Broken Shell Zone -->
+                        <div class="h-24 w-full flex flex-col items-center justify-center relative">
+                            <div id="activeCrackingVisual" class="hidden flex-col items-center">
+                                <!-- Draggable Cracked Shell Halves -->
+                                <div id="draggableShell" draggable="true" class="btn-action cursor-grab active:cursor-grabbing bg-amber-100 hover:bg-amber-200 border-2 border-terracotta px-4 py-2 rounded-2xl shadow-lg flex items-center gap-2.5 z-20">
+                                    <!-- SVG Broken Eggshell Halves -->
+                                    <svg width="46" height="30" viewBox="0 0 46 30">
+                                        <path d="M4 22 C4 8, 18 4, 20 14 L17 18 L21 21 L16 25 Z" fill="#FDE68A" stroke="#B45309" stroke-width="2"/>
+                                        <path d="M42 22 C42 8, 28 4, 26 14 L29 18 L25 21 L30 25 Z" fill="#FDE68A" stroke="#B45309" stroke-width="2"/>
+                                    </svg>
+                                    <div class="text-left">
+                                        <div class="text-xs font-extrabold text-terracotta">Kırık Yumurta Kabuğu!</div>
+                                        <div class="text-[10px] font-bold text-espresso">Sürükle veya Tıkla -> Çöpe At 🗑️</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="idleCrackPrompt" class="text-xs font-bold text-mocha/70 border-2 border-dashed border-mocha/20 px-4 py-2 rounded-xl">
+                                Yumurtayı Burada Kırın
+                            </div>
+                        </div>
+
+                        <!-- Bottom: Two Glass Bowls (Yolks Left, Whites Right) -->
+                        <div class="grid grid-cols-2 gap-4 w-full mt-2">
+                            <!-- Yolk Bowl -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-36 sm:w-40 h-28 glass-bowl rounded-b-full relative overflow-hidden flex flex-col justify-end items-center p-2">
+                                    <div id="yolkBowlFill" class="w-full h-0 bg-amber-400/90 rounded-b-full transition-all duration-500 flex items-center justify-center gap-1"></div>
+                                </div>
+                                <span class="text-xs font-extrabold text-espresso mt-1.5">Sarılar (<span id="yolkCountNum">0</span>/3)</span>
+                            </div>
+
+                            <!-- White Bowl -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-36 sm:w-40 h-28 glass-bowl rounded-b-full relative overflow-hidden flex flex-col justify-end items-center p-2">
+                                    <div id="whiteBowlFill" class="w-full h-0 bg-sky-100/80 border-t border-white rounded-b-full transition-all duration-500 flex items-center justify-center text-[11px] font-bold text-sky-900"></div>
+                                </div>
+                                <span class="text-xs font-extrabold text-mocha mt-1.5">Aklar (<span id="whiteCountNum">0</span>/3)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 4: Interactive Pedal Trash Can -->
+                    <div class="flex flex-col items-center justify-center">
+                        <div id="trashCanTarget" class="w-40 h-56 bg-parchment/90 border-3 border-dashed border-mocha/40 rounded-3xl p-4 flex flex-col items-center justify-center gap-2 transition-all cursor-pointer group hover:border-terracotta">
+                            <span class="text-xs font-extrabold uppercase text-mocha">Mutfak Çöpü</span>
+                            <!-- Animated SVG Trash Bin with Opening Lid -->
+                            <div id="trashBinSvgWrapper" class="relative pt-2">
+                                <svg width="85" height="105" viewBox="0 0 85 105">
+                                    <!-- Hinged Lid -->
+                                    <g id="trashLidGroup" style="transform-origin: 18px 25px; transition: transform 0.28s ease;">
+                                        <rect x="12" y="18" width="60" height="8" rx="4" fill="#475569" />
+                                        <rect x="34" y="11" width="16" height="7" rx="3" fill="#334155" />
+                                    </g>
+                                    <!-- Bin Body -->
+                                    <path d="M16 27 L68 27 L62 94 C62 97, 59 99, 55 99 L29 99 C25 99, 22 97, 22 94 Z" fill="#94A3B8" stroke="#475569" stroke-width="3" />
+                                    <!-- Vertical Ribs -->
+                                    <line x1="32" y1="36" x2="34" y2="88" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" />
+                                    <line x1="42" y1="36" x2="42" y2="88" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" />
+                                    <line x1="52" y1="36" x2="50" y2="88" stroke="#64748B" stroke-width="2.5" stroke-linecap="round" />
+                                </svg>
+                            </div>
+                            <span id="trashCounterBadge" class="text-xs px-3 py-1 rounded-full bg-espresso text-gold font-bold">
+                                Çöpteki Kabuk: 0 / 3
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const activeCrackingVisual = document.getElementById('activeCrackingVisual');
+            const idleCrackPrompt = document.getElementById('idleCrackPrompt');
+            const draggableShell = document.getElementById('draggableShell');
+            const trashCanTarget = document.getElementById('trashCanTarget');
+            const trashLidGroup = document.getElementById('trashLidGroup');
+            const trashBinSvgWrapper = document.getElementById('trashBinSvgWrapper');
+            const yolkBowlFill = document.getElementById('yolkBowlFill');
+            const whiteBowlFill = document.getElementById('whiteBowlFill');
+
+            function crackEgg(eggIndex) {
+                if (waitingForTrash) {
+                    sfx.playError();
+                    showToast("Önce elinizdeki kırık yumurta kabuğunu Çöp Kutusuna atmalısınız!", true);
+                    return;
+                }
+                if (eggIndex !== crackedCount + 1) return;
+
+                crackedCount++;
+                waitingForTrash = true;
+                sfx.playEggCrack();
+
+                // Update egg button in carton
+                const eggBtn = document.getElementById(`wholeEgg_${eggIndex}`);
+                eggBtn.disabled = true;
+                eggBtn.className = "w-28 py-2.5 px-3 rounded-2xl bg-parchment border border-mocha/20 flex items-center justify-center gap-2 font-bold text-xs text-mocha/40";
+                eggBtn.innerHTML = `<span>✓ Kırıldı</span>`;
+
+                // Show broken shell waiting for disposal
+                idleCrackPrompt.classList.add('hidden');
+                activeCrackingVisual.classList.remove('hidden');
+                activeCrackingVisual.classList.add('flex');
+
+                // Animate yolk & white dropping into bowls
+                yolkBowlFill.style.height = `${crackedCount * 24}%`;
+                const yolkDot = document.createElement('div');
+                yolkDot.className = "w-7 h-7 rounded-full bg-amber-600 border-2 border-amber-200 shadow yolk-drop";
+                yolkBowlFill.appendChild(yolkDot);
+
+                whiteBowlFill.style.height = `${crackedCount * 24}%`;
+                whiteBowlFill.textContent = `${crackedCount} Ak`;
+
+                document.getElementById('yolkCountNum').textContent = crackedCount;
+                document.getElementById('whiteCountNum').textContent = crackedCount;
+
+                // Open trash lid slightly to invite player
+                trashLidGroup.style.transform = "rotate(-32deg)";
+                trashCanTarget.classList.add('ring-4', 'ring-terracotta/50', 'bg-amber-50');
+                document.getElementById('eggRuleHint').textContent = "Kabuğu çöpe sürükleyin!";
+                showToast(`${crackedCount}. yumurta kırıldı! Şimdi kabuğunu Çöp Kutusuna atın.`);
+                setBottomHint("Kırılan <strong>Yumurta Kabuğunu</strong> fareyle <strong>Çöp Kutusuna sürükleyin</strong> (veya çöp kutusuna tıklayın).");
+            }
+
+            function disposeShellInTrash() {
+                if (!waitingForTrash) return;
+                waitingForTrash = false;
+                trashedCount++;
+                sfx.playTrashToss();
+
+                // Hide broken shell
+                activeCrackingVisual.classList.add('hidden');
+                activeCrackingVisual.classList.remove('flex');
+                idleCrackPrompt.classList.remove('hidden');
+
+                // Animate trash lid closing & bin shaking
+                trashLidGroup.style.transform = "rotate(0deg)";
+                trashCanTarget.classList.remove('ring-4', 'ring-terracotta/50', 'bg-amber-50');
+                trashBinSvgWrapper.classList.remove('trash-shake');
+                void trashBinSvgWrapper.offsetWidth;
+                trashBinSvgWrapper.classList.add('trash-shake');
+
+                document.getElementById('trashCounterBadge').textContent = `Çöpteki Kabuk: ${trashedCount} / 3`;
+
+                if (trashedCount < 3) {
+                    const nextEggBtn = document.getElementById(`wholeEgg_${trashedCount + 1}`);
+                    nextEggBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    nextEggBtn.classList.add('btn-action', 'cursor-pointer');
+                    document.getElementById('eggRuleHint').textContent = `${trashedCount + 1}. yumurtayı kırabilirsiniz!`;
+                    idleCrackPrompt.textContent = `${trashedCount + 1}. Yumurtayı Kırmak İçin Tıklayın`;
+                    showToast(`Kabuk çöpe atıldı! (${trashedCount}/3) Sıradaki yumurtayı kırın.`);
+                    setBottomHint(`Harika! Şimdi <strong>${trashedCount + 1}. Yumurtaya</strong> tıklayarak kırın.`);
+                } else {
+                    idleCrackPrompt.textContent = "✨ 3 Yumurta Kırıldı & Kabuklar Çöpe Atıldı! ✨";
+                    idleCrackPrompt.className = "text-xs font-extrabold text-pistachio bg-green-50 border-2 border-pistachio px-4 py-2 rounded-xl";
+                    document.getElementById('eggRuleHint').textContent = "Tertemiz tezgah! ✓";
+                    showToast("Tebrikler! 3 yumurta da ayrıldı ve tüm kabuklar çöpe atıldı.");
+                    setBottomHint("Şimdi elektrikli el mikseriyle çırpma aşamasına geçmek için <strong>Sonraki Adıma Geçin</strong>.");
+                    enableNextStageButton();
+                }
+            }
+
+            // Attach listeners for the 3 eggs
+            [1, 2, 3].forEach(i => {
+                const btn = document.getElementById(`wholeEgg_${i}`);
+                btn.addEventListener('click', () => crackEgg(i));
+                btn.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', `egg_${i}`);
+                });
+            });
+
+            const crackDropZone = document.getElementById('eggCrackDropZone');
+            crackDropZone.addEventListener('dragover', e => e.preventDefault());
+            crackDropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const data = e.dataTransfer.getData('text/plain');
+                if (data && data.startsWith('egg_')) {
+                    const idx = parseInt(data.split('_')[1], 10);
+                    crackEgg(idx);
+                }
+            });
+
+            // Shell dragging & clicking to trash
+            draggableShell.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', 'broken_shell');
+                trashLidGroup.style.transform = "rotate(-45deg)";
+            });
+            draggableShell.addEventListener('click', disposeShellInTrash);
+            trashCanTarget.addEventListener('click', disposeShellInTrash);
+            trashCanTarget.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                trashLidGroup.style.transform = "rotate(-48deg)";
+            });
+            trashCanTarget.addEventListener('drop', (e) => {
+                e.preventDefault();
+                disposeShellInTrash();
+            });
+        }
+
+        /* ============================================================
+         * ADIM 3: ŞEKER EKLEME, EL MİKSERİYLE ÇIRPMA & LABNE KARIŞTIRMA
+         * ============================================================ */
+        function renderStage3YolksAndLabnehMixer(viewport) {
+            // Phase 1: Add 4 spoons sugar -> Whip with Electric Mixer to 100%
+            // Phase 2: Add 400g Labneh & Vanilla -> Mix with Electric Mixer to 100%
+            let sugarSpoons = 0;
+            let yolkWhipPct = 0;
+            let addedLabneh = false;
+            let addedVanilla = false;
+            let labnehMixPct = 0;
+            let mixerInterval = null;
+
+            setBottomHint("Önce yumurta sarılarına <strong>4 yemek kaşığı toz şeker</strong> ekleyin.");
+
+            viewport.innerHTML = `
+                <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <!-- Left: Ingredients Panel -->
+                    <div class="flex flex-col items-center gap-3">
+                        <!-- Sugar Button -->
+                        <button id="spoonSugarBtn" class="btn-action w-48 bg-white hover:bg-amber-50 border-2 border-espresso rounded-2xl p-3 shadow-md flex items-center gap-3 cursor-pointer">
+                            <div class="w-11 h-11 rounded-xl bg-amber-100 flex items-center justify-center text-xl shrink-0">🥄</div>
+                            <div class="text-left">
+                                <div class="font-bold text-xs text-espresso">Toz Şeker Ekle</div>
+                                <div id="sugarCountBadge" class="text-[11px] font-extrabold text-terracotta">0 / 4 Yemek Kaşığı</div>
+                            </div>
+                        </button>
+
+                        <!-- 400g Labneh Button -->
+                        <button id="addLabnehBtn" disabled class="w-48 bg-white/60 border-2 border-dashed border-mocha/30 rounded-2xl p-3 shadow-sm flex items-center gap-3 opacity-50 transition">
+                            <div class="w-11 h-11 rounded-xl bg-cream border border-gold flex items-center justify-center text-xl shrink-0">🧀</div>
+                            <div class="text-left">
+                                <div class="font-bold text-xs text-espresso">400g Süzme Labne</div>
+                                <div id="labnehStatusText" class="text-[11px] text-mocha">Önce Sarıları Çırpın</div>
+                            </div>
+                        </button>
+
+                        <!-- Vanilla Button -->
+                        <button id="addVanillaBtn" disabled class="w-48 bg-white/60 border-2 border-dashed border-mocha/30 rounded-2xl p-3 shadow-sm flex items-center gap-3 opacity-50 transition">
+                            <div class="w-11 h-11 rounded-xl bg-amber-50 border border-gold flex items-center justify-center text-xl shrink-0">🌸</div>
+                            <div class="text-left">
+                                <div class="font-bold text-xs text-espresso">1 Paket Vanilya</div>
+                                <div id="vanillaStatusText" class="text-[11px] text-mocha">Önce Sarıları Çırpın</div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Center: Interactive SVG Electric Hand Mixer + Glass Bowl -->
+                    <div class="flex flex-col items-center justify-center relative">
+                        <!-- Interactive Hand Mixer -->
+                        <div id="stage3MixerTouchArea" class="z-20 -mb-6 opacity-50 pointer-events-none transition-opacity">
+                            ${getHandMixerSVG('s3')}
+                        </div>
+
+                        <!-- Falling Sugar / Splash Particles Container -->
+                        <div id="s3ParticleZone" class="pointer-events-none absolute top-28 w-44 h-16 flex justify-around items-end overflow-hidden z-10"></div>
+
+                        <!-- Mixing Bowl -->
+                        <div class="w-64 h-36 glass-bowl rounded-b-full relative overflow-hidden flex flex-col justify-end items-center p-2">
+                            <div id="s3MixtureVisual" class="w-full h-3/5 rounded-b-full transition-all duration-200 flex flex-col items-center justify-center relative" style="background-color: #F59E0B;">
+                                <span id="s3BowlLabel" class="text-xs font-extrabold text-amber-950 drop-shadow-sm">3 Yumurta Sarısı</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Mixer Speed & Texture Progress -->
+                    <div class="bg-parchment/90 p-4 rounded-2xl border-2 border-gold/40 flex flex-col gap-3 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-extrabold uppercase text-terracotta" id="s3PhaseTitle">1. Aşama: Şekerle Çırpma</span>
+                            <span id="s3RPMBadge" class="text-[11px] px-2 py-0.5 rounded-full bg-espresso text-gold font-bold">Motor: Kapalı</span>
+                        </div>
+                        <p id="s3PhaseDesc" class="text-xs text-mocha leading-relaxed">
+                            Şeker tamamen eriyip karışım açık sarı, kremsi bir kıvam alana kadar <strong>El Mikserine basılı tutun!</strong>
+                        </p>
+
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-bold text-espresso">
+                                <span>Çırpma Kıvamı:</span>
+                                <span id="s3ProgressPct">0%</span>
+                            </div>
+                            <div class="w-full h-3.5 bg-white rounded-full overflow-hidden border border-gold/50">
+                                <div id="s3ProgressBar" class="h-full bg-gradient-to-r from-amber-500 via-yellow-300 to-pistachio transition-all duration-100" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const spoonSugarBtn = document.getElementById('spoonSugarBtn');
+            const addLabnehBtn = document.getElementById('addLabnehBtn');
+            const addVanillaBtn = document.getElementById('addVanillaBtn');
+            const mixerTouchArea = document.getElementById('stage3MixerTouchArea');
+            const mixerContainer = document.getElementById('s3_mixerContainer');
+            const mixerLed = document.getElementById('s3_led');
+            const s3MixtureVisual = document.getElementById('s3MixtureVisual');
+            const s3ParticleZone = document.getElementById('s3ParticleZone');
+            const s3ProgressBar = document.getElementById('s3ProgressBar');
+            const s3ProgressPct = document.getElementById('s3ProgressPct');
+            const s3RPMBadge = document.getElementById('s3RPMBadge');
+
+            function spawnSplashDroplets(colorHex) {
+                s3ParticleZone.innerHTML = '';
+                for (let i = 0; i < 6; i++) {
+                    const drop = document.createElement('div');
+                    drop.className = "w-2.5 h-2.5 rounded-full";
+                    drop.style.backgroundColor = colorHex;
+                    drop.style.animation = `splashUp ${0.35 + Math.random() * 0.25}s infinite ease-out`;
+                    s3ParticleZone.appendChild(drop);
+                }
+            }
+
+            spoonSugarBtn.addEventListener('click', () => {
+                if (sugarSpoons >= 4) return;
+                sugarSpoons++;
+                sfx.playSiftSound();
+                document.getElementById('sugarCountBadge').textContent = `${sugarSpoons} / 4 Yemek Kaşığı`;
+                document.getElementById('s3BowlLabel').textContent = `Sarılar + ${sugarSpoons} Kaşık Şeker`;
+
+                if (sugarSpoons === 4) {
+                    spoonSugarBtn.disabled = true;
+                    spoonSugarBtn.classList.remove('btn-action');
+                    spoonSugarBtn.classList.add('opacity-60');
+                    document.getElementById('sugarCountBadge').textContent = "4 Kaşık Eklendi ✓";
+
+                    mixerTouchArea.classList.remove('opacity-50', 'pointer-events-none');
+                    showToast("Şeker eklendi! Şimdi El Mikserinin üzerine BASILI TUTARAK çırpın!");
+                    setBottomHint("<strong>El Mikserinin üzerine fareyle veya parmağınızla BASILI TUTUN!</strong>");
+                }
+            });
+
+            function startMixerHold(e) {
+                if (e && e.cancelable) e.preventDefault();
+                if (mixerInterval) return;
+
+                // Determine if we are in Phase 1 (Yolk+Sugar) or Phase 2 (Labneh+Vanilla)
+                const isPhase1 = sugarSpoons === 4 && yolkWhipPct < 100;
+                const isPhase2 = yolkWhipPct >= 100 && addedLabneh && addedVanilla && labnehMixPct < 100;
+                if (!isPhase1 && !isPhase2) return;
+
+                mixerContainer.classList.add('mixer-running');
+                s3MixtureVisual.classList.add('swirl-active');
+                mixerLed.setAttribute('fill', '#22C55E');
+                s3RPMBadge.textContent = isPhase1 ? "Motor: Yüksek Devir ⚡" : "Motor: Düşük Devir 🔄";
+                sfx.startMixerSound(isPhase1 ? 'high' : 'low');
+                spawnSplashDroplets(isPhase1 ? '#FDE047' : '#FFFBEB');
+
+                mixerInterval = setInterval(() => {
+                    if (isPhase1) {
+                        yolkWhipPct = Math.min(100, yolkWhipPct + 4);
+                        s3ProgressBar.style.width = `${yolkWhipPct}%`;
+                        s3ProgressPct.textContent = `${yolkWhipPct}%`;
+                        s3MixtureVisual.style.height = `${60 + (yolkWhipPct / 100) * 18}%`;
+
+                        // Interpolate color from dark orange-yellow to pale creamy yellow
+                        if (yolkWhipPct > 35) s3MixtureVisual.style.backgroundColor = '#FBBF24';
+                        if (yolkWhipPct > 70) s3MixtureVisual.style.backgroundColor = '#FDE68A';
+                        if (yolkWhipPct >= 100) {
+                            s3MixtureVisual.style.backgroundColor = '#FEF3C7';
+                            document.getElementById('s3BowlLabel').textContent = "Açık Sarı Kremsi Baz ✨";
+                            stopMixerHold();
+                            mixerTouchArea.classList.add('opacity-50', 'pointer-events-none');
+
+                            // Unlock Labneh & Vanilla
+                            addLabnehBtn.disabled = false;
+                            addLabnehBtn.className = "btn-action w-48 bg-white hover:bg-amber-50 border-2 border-espresso rounded-2xl p-3 shadow-md flex items-center gap-3 cursor-pointer";
+                            document.getElementById('labnehStatusText').textContent = "Tıkla & Kaseye Ekle";
+
+                            addVanillaBtn.disabled = false;
+                            addVanillaBtn.className = "btn-action w-48 bg-white hover:bg-amber-50 border-2 border-espresso rounded-2xl p-3 shadow-md flex items-center gap-3 cursor-pointer";
+                            document.getElementById('vanillaStatusText').textContent = "Tıkla & Kaseye Ekle";
+
+                            document.getElementById('s3PhaseTitle').textContent = "2. Aşama: Labne ve Vanilya";
+                            document.getElementById('s3PhaseDesc').textContent = "Şimdi 400g Labne ve vanilyayı ekleyip düşük devirde pürüzsüz olana dek tekrar mikserle çırpın.";
+                            s3ProgressBar.style.width = "0%";
+                            s3ProgressPct.textContent = "0%";
+                            showToast("Yumurta sarıları krema gibi oldu! Şimdi Labne ve Vanilyayı ekleyin.");
+                            setBottomHint("Sol taraftan <strong>400g Süzme Labne</strong> ve <strong>1 Paket Vanilya</strong> butonlarına tıklayın.");
+                        }
+                    } else if (isPhase2) {
+                        labnehMixPct = Math.min(100, labnehMixPct + 5);
+                        s3ProgressBar.style.width = `${labnehMixPct}%`;
+                        s3ProgressPct.textContent = `${labnehMixPct}%`;
+                        s3MixtureVisual.style.height = `${78 + (labnehMixPct / 100) * 12}%`;
+
+                        if (labnehMixPct >= 100) {
+                            s3MixtureVisual.style.backgroundColor = '#FFFDF9';
+                            document.getElementById('s3BowlLabel').textContent = "✨ İpeksi Labne Kreması ✨";
+                            stopMixerHold();
+                            document.getElementById('s3_holdBadge').innerHTML = `<i class="fa-solid fa-check"></i> <span>ÇIRPMA TAMAMLANDI!</span>`;
+                            document.getElementById('s3_holdBadge').className = "-mt-2 px-3 py-1 rounded-full bg-pistachio text-white font-extrabold text-[11px] shadow-md";
+                            showToast("Muhteşem! Labneli krema pürüzsüz ve kadifemsi kıvama ulaştı.");
+                            setBottomHint("Yumurta aklarını köpürtmek ve katlamak için <strong>Sonraki Adıma Geçin</strong>.");
+                            enableNextStageButton();
+                        }
+                    }
+                }, 80);
+            }
+
+            function stopMixerHold() {
+                if (mixerInterval) {
+                    clearInterval(mixerInterval);
+                    mixerInterval = null;
+                }
+                if (mixerContainer) mixerContainer.classList.remove('mixer-running');
+                if (s3MixtureVisual) s3MixtureVisual.classList.remove('swirl-active');
+                if (mixerLed) mixerLed.setAttribute('fill', '#9CA3AF');
+                if (s3ParticleZone) s3ParticleZone.innerHTML = '';
+                if (s3RPMBadge) s3RPMBadge.textContent = "Motor: Durdu";
+                sfx.stopMixerSound();
+            }
+
+            function checkLabnehAndVanillaReady() {
+                if (addedLabneh && addedVanilla) {
+                    mixerTouchArea.classList.remove('opacity-50', 'pointer-events-none');
+                    document.getElementById('s3_holdBadge').innerHTML = `<i class="fa-solid fa-hand-pointer"></i> <span>DÜŞÜK DEVİRDE BASILI TUT</span>`;
+                    showToast("Labne ve vanilya kasede! Şimdi El Mikserine BASILI TUTARAK karıştırın.");
+                    setBottomHint("<strong>El Mikserinin üzerine BASILI TUTARAK</strong> labneyi pürüzsüzleştirin.");
+                }
+            }
+
+            addLabnehBtn.addEventListener('click', () => {
+                if (addedLabneh || yolkWhipPct < 100) return;
+                addedLabneh = true;
+                sfx.playPop(380, 0.12);
+                addLabnehBtn.disabled = true;
+                addLabnehBtn.classList.remove('btn-action');
+                addLabnehBtn.classList.add('opacity-60');
+                document.getElementById('labnehStatusText').textContent = "400g Eklendi ✓";
+                document.getElementById('s3BowlLabel').textContent = "Sarılar + 400g Labne";
+                checkLabnehAndVanillaReady();
+            });
+
+            addVanillaBtn.addEventListener('click', () => {
+                if (addedVanilla || yolkWhipPct < 100) return;
+                addedVanilla = true;
+                sfx.playPop(680, 0.1);
+                addVanillaBtn.disabled = true;
+                addVanillaBtn.classList.remove('btn-action');
+                addVanillaBtn.classList.add('opacity-60');
+                document.getElementById('vanillaStatusText').textContent = "Vanilya Eklendi ✓";
+                checkLabnehAndVanillaReady();
+            });
+
+            mixerTouchArea.addEventListener('mousedown', startMixerHold);
+            mixerTouchArea.addEventListener('touchstart', startMixerHold);
+            window.addEventListener('mouseup', stopMixerHold);
+            window.addEventListener('touchend', stopMixerHold);
+        }
+
+        /* ============================================================
+         * ADIM 4: YUMURTA AKI KÖPÜRTME (MİKSER) & SPATULA İLE KATLAMA
+         * ============================================================ */
+        function renderStage4WhitesMixerAndFold(viewport) {
+            let addedSalt = false;
+            let foamPct = 0;
+            let foldCount = 0;
+            let mixerInterval = null;
+            let cursorPos = 50;
+            let cursorDir = 1;
+
+            setBottomHint("Önce yumurta aklarına <strong>Bir Tutam Tuz</strong> atın, ardından <strong>El Mikserine basılı tutarak</strong> kar gibi köpürtün!");
+
+            viewport.innerHTML = `
+                <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <!-- Left: Salt & Sub-step Info -->
+                    <div class="flex flex-col items-center gap-3">
+                        <button id="addSaltPinchBtn" class="btn-action w-48 bg-white hover:bg-sky-50 border-2 border-espresso rounded-2xl p-3.5 shadow-md flex items-center gap-3 cursor-pointer">
+                            <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center text-2xl shrink-0">🧂</div>
+                            <div class="text-left">
+                                <div class="font-bold text-xs text-espresso">Bir Tutam Tuz At</div>
+                                <div id="saltStatusText" class="text-[11px] font-bold text-terracotta">Tıkla & Ekle</div>
+                            </div>
+                        </button>
+
+                        <div class="bg-parchment/90 p-3.5 rounded-2xl border border-gold/40 text-xs text-mocha space-y-1.5 w-48">
+                            <div class="font-extrabold text-espresso">Aşama Durumu:</div>
+                            <div id="s4Step1Check" class="flex items-center gap-1.5 text-terracotta font-bold">
+                                <i class="fa-regular fa-circle"></i> <span>1. Kar Gibi Köpürt (%0)</span>
+                            </div>
+                            <div id="s4Step2Check" class="flex items-center gap-1.5 text-mocha/60">
+                                <i class="fa-regular fa-circle"></i> <span>2. Spatula ile Katla (0/4)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Center: Electric Hand Mixer OR Spatula Over Glass Bowl -->
+                    <div class="flex flex-col items-center justify-center relative">
+                        <!-- Electric Mixer (Active in Part 1) -->
+                        <div id="stage4MixerArea" class="z-20 -mb-6 opacity-50 pointer-events-none transition-opacity">
+                            ${getHandMixerSVG('s4')}
+                        </div>
+
+                        <!-- Spatula Visual (Active in Part 2) -->
+                        <div id="stage4SpatulaArea" class="hidden flex-col items-center z-20 -mb-3">
+                            <div id="spatulaSvgBox" class="w-16 h-16 rounded-2xl bg-terracotta text-white border-2 border-gold shadow-lg flex items-center justify-center text-3xl">
+                                🥄
+                            </div>
+                        </div>
+
+                        <div id="s4ParticleZone" class="pointer-events-none absolute top-28 w-44 h-16 flex justify-around items-end overflow-hidden z-10"></div>
+
+                        <!-- Egg Whites / Combined Cream Glass Bowl -->
+                        <div class="w-64 h-40 glass-bowl rounded-b-full relative overflow-hidden flex flex-col justify-end items-center p-2">
+                            <div id="s4BowlLiquid" class="w-full h-1/3 bg-sky-100/75 rounded-b-full transition-all duration-200 flex flex-col items-center justify-center relative">
+                                <!-- Fluffy Snowy Peaks -->
+                                <div id="s4SnowPeaks" class="opacity-0 transition-opacity duration-200 flex items-end justify-center -mt-7">
+                                    <div class="w-12 h-12 bg-white rounded-full shadow-sm -mr-3"></div>
+                                    <div class="w-16 h-16 bg-white rounded-full shadow-md z-10"></div>
+                                    <div class="w-12 h-12 bg-white rounded-full shadow-sm -ml-3"></div>
+                                </div>
+                                <span id="s4BowlText" class="text-xs font-extrabold text-sky-950 mt-1">3 Yumurta Akı</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Whipping Progress OR Folding Timing Gauge -->
+                    <div class="bg-parchment/90 p-4 rounded-2xl border-2 border-gold/40 flex flex-col gap-3 shadow-sm">
+                        <!-- Part 1: Foam Meter -->
+                        <div id="s4WhipPanel" class="space-y-3">
+                            <span class="text-xs font-extrabold uppercase text-terracotta">1. Yumurta Akı Köpürtme</span>
+                            <p class="text-xs text-mocha">El Mikserine basılı tutarak yumurta aklarını bembeyaz kar tepecikleri olana dek çırpın!</p>
+                            <div class="w-full h-3.5 bg-white rounded-full overflow-hidden border border-gold/50">
+                                <div id="s4FoamBar" class="h-full bg-gradient-to-r from-sky-300 to-pistachio transition-all duration-100" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Part 2: Spatula Folding Rhythm Game (Hidden initially) -->
+                        <div id="s4FoldPanel" class="hidden flex-col gap-3">
+                            <div class="flex justify-between items-center text-xs font-bold">
+                                <span class="text-espresso">Spatula Katlama: <strong id="s4FoldCounter" class="text-terracotta">0 / 4</strong></span>
+                                <span class="text-pistachio">Yeşilde Katla!</span>
+                            </div>
+                            <div class="w-full h-6 bg-red-100 rounded-full relative overflow-hidden border-2 border-espresso/30 flex items-center">
+                                <div class="w-[28%] h-full bg-red-200 flex items-center justify-center text-[9px] font-bold text-red-800">Hızlı</div>
+                                <div class="w-[44%] h-full bg-pistachio flex items-center justify-center text-[10px] font-extrabold text-white border-x border-white">NAZİK KATLAMA</div>
+                                <div class="w-[28%] h-full bg-red-200 flex items-center justify-center text-[9px] font-bold text-red-800">Sert</div>
+                                <div id="s4FoldCursor" class="w-3 h-full bg-espresso border border-gold rounded-full absolute top-0" style="left: 50%"></div>
+                            </div>
+                            <button id="s4FoldBtn" class="btn-action w-full py-2.5 rounded-xl bg-terracotta hover:bg-espresso text-white font-bold text-xs sm:text-sm shadow flex items-center justify-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                                <span>Spatula ile Alttan Üste Katla!</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const addSaltPinchBtn = document.getElementById('addSaltPinchBtn');
+            const stage4MixerArea = document.getElementById('stage4MixerArea');
+            const mixerContainer = document.getElementById('s4_mixerContainer');
+            const mixerLed = document.getElementById('s4_led');
+            const s4BowlLiquid = document.getElementById('s4BowlLiquid');
+            const s4SnowPeaks = document.getElementById('s4SnowPeaks');
+            const s4FoamBar = document.getElementById('s4FoamBar');
+            const s4WhipPanel = document.getElementById('s4WhipPanel');
+            const s4FoldPanel = document.getElementById('s4FoldPanel');
+            const s4FoldCursor = document.getElementById('s4FoldCursor');
+            const s4FoldBtn = document.getElementById('s4FoldBtn');
+            const spatulaSvgBox = document.getElementById('spatulaSvgBox');
+
+            addSaltPinchBtn.addEventListener('click', () => {
+                if (addedSalt) return;
+                addedSalt = true;
+                sfx.playSiftSound();
+                addSaltPinchBtn.disabled = true;
+                addSaltPinchBtn.classList.remove('btn-action');
+                addSaltPinchBtn.classList.add('opacity-60');
+                document.getElementById('saltStatusText').textContent = "Tuz Eklendi ✓";
+
+                stage4MixerArea.classList.remove('opacity-50', 'pointer-events-none');
+                showToast("Bir tutam tuz eklendi! Şimdi El Mikserine BASILI TUTARAK köpürtün.");
+                setBottomHint("<strong>El Mikserinin üzerine BASILI TUTARAK</strong> yumurta aklarını kar gibi köpürtün!");
+            });
+
+            function startWhitesMixer(e) {
+                if (e && e.cancelable) e.preventDefault();
+                if (!addedSalt || foamPct >= 100 || mixerInterval) return;
+
+                mixerContainer.classList.add('mixer-running');
+                s4BowlLiquid.classList.add('swirl-active');
+                mixerLed.setAttribute('fill', '#22C55E');
+                sfx.startMixerSound('high');
+
+                mixerInterval = setInterval(() => {
+                    foamPct = Math.min(100, foamPct + 4);
+                    s4FoamBar.style.width = `${foamPct}%`;
+                    s4BowlLiquid.style.height = `${33 + (foamPct / 100) * 57}%`;
+                    document.getElementById('s4Step1Check').innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>1. Köpürtülüyor (%${foamPct})</span>`;
+
+                    if (foamPct > 30) {
+                        s4BowlLiquid.style.backgroundColor = '#FFFFFF';
+                        s4SnowPeaks.style.opacity = (foamPct / 100).toString();
+                        document.getElementById('s4BowlText').textContent = "Kar Gibi Köpürüyor...";
+                    }
+
+                    if (foamPct >= 100) {
+                        stopWhitesMixer();
+                        document.getElementById('s4Step1Check').className = "flex items-center gap-1.5 text-pistachio font-bold";
+                        document.getElementById('s4Step1Check').innerHTML = `<i class="fa-solid fa-check-circle"></i> <span>1. Kar Köpüğü Hazır!</span>`;
+                        document.getElementById('s4BowlText').textContent = "☁️ Sert Kar Köpüğü + Labne Kreması ☁️";
+                        s4BowlLiquid.style.background = "linear-gradient(180deg, #FFFFFF 0%, #FEF3C7 100%)";
+
+                        // Switch from Mixer to Spatula Folding
+                        stage4MixerArea.classList.add('hidden');
+                        document.getElementById('stage4SpatulaArea').classList.remove('hidden');
+                        document.getElementById('stage4SpatulaArea').classList.add('flex');
+
+                        s4WhipPanel.classList.add('hidden');
+                        s4FoldPanel.classList.remove('hidden');
+                        s4FoldPanel.classList.add('flex');
+
+                        showToast("Yumurta akları kar gibi oldu! Şimdi Spatula ile söndürmeden kremaya katlayın.");
+                        setBottomHint("Gösterge <strong>Yeşil Bölgedeyken (Nazik Katlama)</strong> Spatula butonuna tıklayın (4 Kez).");
+                    }
+                }, 75);
+            }
+
+            function stopWhitesMixer() {
+                if (mixerInterval) {
+                    clearInterval(mixerInterval);
+                    mixerInterval = null;
+                }
+                if (mixerContainer) mixerContainer.classList.remove('mixer-running');
+                if (s4BowlLiquid) s4BowlLiquid.classList.remove('swirl-active');
+                if (mixerLed) mixerLed.setAttribute('fill', '#9CA3AF');
+                sfx.stopMixerSound();
+            }
+
+            stage4MixerArea.addEventListener('mousedown', startWhitesMixer);
+            stage4MixerArea.addEventListener('touchstart', startWhitesMixer);
+            window.addEventListener('mouseup', stopWhitesMixer);
+            window.addEventListener('touchend', stopWhitesMixer);
+
+            // Folding Rhythm Cursor
+            const foldTimer = setInterval(() => {
+                cursorPos += cursorDir * 2.3;
+                if (cursorPos >= 95) { cursorPos = 95; cursorDir = -1; }
+                else if (cursorPos <= 3) { cursorPos = 3; cursorDir = 1; }
+                if (s4FoldCursor) s4FoldCursor.style.left = `${cursorPos}%`;
+            }, 25);
+            gameState.activeIntervals.push(foldTimer);
+
+            s4FoldBtn.addEventListener('click', () => {
+                if (foldCount >= 4) return;
+                spatulaSvgBox.classList.remove('fold-animate');
+                void spatulaSvgBox.offsetWidth;
+                spatulaSvgBox.classList.add('fold-animate');
+
+                if (cursorPos >= 26 && cursorPos <= 74) {
+                    foldCount++;
+                    sfx.playPop(500 + foldCount * 70, 0.12);
+                    document.getElementById('s4FoldCounter').textContent = `${foldCount} / 4`;
+                    document.getElementById('s4Step2Check').innerHTML = `<i class="fa-solid fa-check"></i> <span>2. Katlama (${foldCount}/4)</span>`;
+                    showToast(`Harika katlama! (${foldCount}/4) Köpük sönmeden birleşiyor.`);
+
+                    if (foldCount >= 4) {
+                        clearInterval(foldTimer);
+                        s4BowlLiquid.style.background = "#FFFBEB";
+                        document.getElementById('s4BowlText').textContent = "✨ Bulut Gibi Tiramisu Kreması! ✨";
+                        s4FoldBtn.disabled = true;
+                        s4FoldBtn.className = "w-full py-2.5 rounded-xl bg-pistachio text-white font-bold text-xs sm:text-sm shadow flex items-center justify-center gap-2";
+                        s4FoldBtn.innerHTML = `<i class="fa-solid fa-check"></i> <span>Krema Kusursuzca Birleşti!</span>`;
+                        setBottomHint("Kremamız hazır! Kedidillerini ıslatıp borcama dizmek için <strong>Sonraki Adıma Geçin</strong>.");
+                        enableNextStageButton();
+                    }
+                } else {
+                    sfx.playError();
+                    gameState.foldingQuality = Math.max(60, gameState.foldingQuality - 8);
+                    updateScore(-4);
+                    showToast("Çok sert karıştırdınız! Yeşil bölgede tıklayarak nazikçe katlayın.", true);
+                }
+            });
+        }
+
+        /* ============================================================
+         * ADIM 5: KEDİDİLİ ISLATMA (BASILI TUT) VE BORCAMA KAT DİZİMİ
+         * ============================================================ */
+        function renderStage5DipAndLayer(viewport) {
+            let subPhase = 0; // 0: Row 1 biscuits, 1: Cream 1, 2: Row 2 biscuits, 3: Cream 2
+            let biscuitsPlaced = 0;
+            let isDipping = false;
+            let dipMs = 0;
+            let dipInterval = null;
+
+            setBottomHint("Kedidilini soğuk kahveye batırmak için <strong>Basılı Tutun</strong> ve gösterge <strong>Yeşil Bölgedeyken</strong> bırakın!");
+
+            viewport.innerHTML = `
+                <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <!-- Left: Dipping & Cream Spreading Controls -->
+                    <div class="bg-white/90 p-4 rounded-2xl border-2 border-gold/50 shadow-sm flex flex-col items-center gap-3">
+                        <div class="w-full flex items-center justify-between border-b border-parchment pb-2">
+                            <span id="s5PhaseBadge" class="text-xs font-extrabold uppercase text-terracotta">1. Kat: Kedidili Islatma (0/3)</span>
+                            <span class="text-xs font-bold text-mocha">Yeşil Bölgede Bırak!</span>
+                        </div>
+
+                        <!-- Dipping Station -->
+                        <div id="s5DipBox" class="w-full flex flex-col items-center gap-3 py-1">
+                            <div class="relative w-52 h-24 flex flex-col items-center justify-end">
+                                <div id="s5BiscuitVisual" class="w-32 h-8 rounded-full bg-amber-200 border-2 border-amber-400 shadow flex items-center justify-center text-xs font-bold text-espresso transition-transform duration-150 mb-2">
+                                    🥖 Kedidili Bisküvi
+                                </div>
+                                <div class="w-48 h-10 bg-espresso rounded-b-2xl border-2 border-gold/50 flex items-center justify-center text-[11px] text-gold font-semibold">
+                                    Soğuk Espresso (22°C)
+                                </div>
+                            </div>
+
+                            <div class="w-full h-6 bg-gray-200 rounded-full overflow-hidden border border-espresso/30 relative flex">
+                                <div class="w-[33%] h-full bg-amber-200 flex items-center justify-center text-[10px] font-bold text-amber-900">Kuru</div>
+                                <div class="w-[37%] h-full bg-pistachio flex items-center justify-center text-[10px] font-extrabold text-white border-x border-white">MÜKEMMEL (1 sn)</div>
+                                <div class="w-[30%] h-full bg-red-400 flex items-center justify-center text-[10px] font-bold text-white">Dağıldı!</div>
+                                <div id="s5DipFill" class="absolute top-0 left-0 h-full bg-espresso/45 transition-none" style="width: 0%"></div>
+                            </div>
+
+                            <button id="s5DipHoldBtn" class="btn-action w-full py-3 rounded-xl bg-terracotta hover:bg-espresso text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 cursor-pointer select-none">
+                                <i class="fa-solid fa-hand-pointer"></i>
+                                <span>Kahveye Batır (Basılı Tut & Yeşilde Bırak)</span>
+                            </button>
+                        </div>
+
+                        <!-- Cream Spreading Station -->
+                        <div id="s5CreamBox" class="hidden w-full flex-col items-center gap-3 py-4">
+                            <div class="text-4xl">🥣</div>
+                            <p id="s5CreamPrompt" class="text-xs sm:text-sm text-center text-espresso font-bold">
+                                Kedidilleri dizildi! Şimdi kremanın yarısını spatula ile eşitçe yayın.
+                            </p>
+                            <button id="s5SpreadBtn" class="btn-action w-full py-3 rounded-xl bg-pistachio hover:bg-green-700 text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>Spatula ile Kremayı Sıva</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Glass Borcam Cross-Section -->
+                    <div class="flex flex-col items-center justify-center">
+                        <span class="text-xs font-extrabold text-espresso mb-2">Cam Borcam (Katman Kesiti)</span>
+                        <div class="w-64 sm:w-72 h-48 glass-bowl rounded-2xl p-3 flex flex-col justify-end gap-1 relative overflow-hidden border-4 border-sky-200/80 shadow-inner">
+                            <div id="borcamCreamTop" class="w-full h-0 bg-[#FFFBEB] rounded-t-lg transition-all duration-500 flex items-center justify-center overflow-hidden shadow-inner">
+                                <span class="text-[11px] font-bold text-amber-900">2. Kat İpeksi Krema</span>
+                            </div>
+                            <div id="borcamBiscuits2" class="w-full h-8 grid grid-cols-3 gap-1.5 px-1 items-center"></div>
+                            <div id="borcamCreamMid" class="w-full h-0 bg-[#FEF9C3] rounded-md transition-all duration-500 flex items-center justify-center overflow-hidden shadow-inner">
+                                <span class="text-[11px] font-bold text-amber-900">1. Kat Krema</span>
+                            </div>
+                            <div id="borcamBiscuits1" class="w-full h-8 grid grid-cols-3 gap-1.5 px-1 items-center"></div>
+                        </div>
+                        <span id="s5BorcamLabel" class="text-xs text-mocha font-bold mt-2">1. Kat Kedidillerini Islatıp Dizin</span>
+                    </div>
+                </div>
+            `;
+
+            const s5DipHoldBtn = document.getElementById('s5DipHoldBtn');
+            const s5DipFill = document.getElementById('s5DipFill');
+            const s5BiscuitVisual = document.getElementById('s5BiscuitVisual');
+            const s5DipBox = document.getElementById('s5DipBox');
+            const s5CreamBox = document.getElementById('s5CreamBox');
+            const s5SpreadBtn = document.getElementById('s5SpreadBtn');
+            const s5PhaseBadge = document.getElementById('s5PhaseBadge');
+
+            function startDipHold(e) {
+                if (e && e.cancelable) e.preventDefault();
+                if (isDipping || (subPhase !== 0 && subPhase !== 2)) return;
+                isDipping = true;
+                dipMs = 0;
+                s5BiscuitVisual.style.transform = "translateY(20px)";
+                sfx.startPourSound();
+
+                dipInterval = setInterval(() => {
+                    dipMs += 40;
+                    const pct = Math.min(100, (dipMs / 1500) * 100);
+                    s5DipFill.style.width = `${pct}%`;
+                }, 40);
+            }
+
+            function stopDipHold() {
+                if (!isDipping) return;
+                isDipping = false;
+                clearInterval(dipInterval);
+                sfx.stopPourSound();
+                s5BiscuitVisual.style.transform = "translateY(0px)";
+
+                const pct = Math.min(100, (dipMs / 1500) * 100);
+                let styleClass = "bg-amber-700 border-amber-900 text-amber-100";
+                let label = "Tam Kıvam";
+
+                if (pct < 32) {
+                    styleClass = "bg-amber-200 border-amber-400 text-amber-900";
+                    label = "Kuru";
+                    gameState.coffeeDipQuality = Math.max(60, gameState.coffeeDipQuality - 7);
+                    updateScore(-3);
+                    sfx.playError();
+                    showToast("Çok erken çıkardınız, kedidili kuru kaldı!", true);
+                } else if (pct <= 72) {
+                    sfx.playPop(620, 0.1);
+                    showToast("Mükemmel ıslatma! Kedidili borcama dizildi.");
+                } else {
+                    styleClass = "bg-espresso border-black text-amber-200 opacity-85";
+                    label = "Çok Islak";
+                    gameState.coffeeDipQuality = Math.max(60, gameState.coffeeDipQuality - 8);
+                    updateScore(-4);
+                    sfx.playError();
+                    showToast("Kahvede fazla tuttunuz, kedidili biraz ezildi!", true);
+                }
+
+                biscuitsPlaced++;
+                const targetRow = subPhase === 0 ? document.getElementById('borcamBiscuits1') : document.getElementById('borcamBiscuits2');
+                const el = document.createElement('div');
+                el.className = `h-7 rounded-full border-2 ${styleClass} flex items-center justify-center text-[10px] font-bold shadow-sm`;
+                el.textContent = label;
+                targetRow.appendChild(el);
+
+                setTimeout(() => { s5DipFill.style.width = '0%'; }, 200);
+                const layerNo = subPhase === 0 ? 1 : 2;
+                s5PhaseBadge.textContent = `${layerNo}. Kat: Kedidili Islatma (${biscuitsPlaced}/3)`;
+
+                if (biscuitsPlaced >= 3) {
+                    biscuitsPlaced = 0;
+                    subPhase++;
+                    s5DipBox.classList.add('hidden');
+                    s5CreamBox.classList.remove('hidden');
+                    s5CreamBox.classList.add('flex');
+                    s5PhaseBadge.textContent = subPhase === 1 ? "1. Kat Kremayı Yay" : "2. Kat Kremayı Sıva";
+                    setBottomHint("<strong>Spatula ile Kremayı Sıva</strong> butonuna tıklayın.");
+                }
+            }
+
+            s5DipHoldBtn.addEventListener('mousedown', startDipHold);
+            s5DipHoldBtn.addEventListener('touchstart', startDipHold);
+            window.addEventListener('mouseup', stopDipHold);
+            window.addEventListener('touchend', stopDipHold);
+
+            s5SpreadBtn.addEventListener('click', () => {
+                sfx.playPop(520, 0.14);
+                if (subPhase === 1) {
+                    document.getElementById('borcamCreamMid').style.height = "38px";
+                    subPhase = 2;
+                    s5CreamBox.classList.add('hidden');
+                    s5CreamBox.classList.remove('flex');
+                    s5DipBox.classList.remove('hidden');
+                    s5PhaseBadge.textContent = "2. Kat: Kedidili Islatma (0/3)";
+                    document.getElementById('s5BorcamLabel').textContent = "Şimdi 2. Kat Kedidillerini Dizin";
+                    showToast("1. kat krema yayıldı! Şimdi 2. kat kedidillerini ıslatın.");
+                } else if (subPhase === 3) {
+                    document.getElementById('borcamCreamTop').style.height = "42px";
+                    subPhase = 4;
+                    s5SpreadBtn.disabled = true;
+                    s5SpreadBtn.className = "w-full py-3 rounded-xl bg-pistachio text-white font-bold text-sm shadow flex items-center justify-center gap-2";
+                    s5SpreadBtn.innerHTML = `<i class="fa-solid fa-check"></i> <span>Katlar Kusursuzca Tamamlandı!</span>`;
+                    showToast("Harika! Tiramisu katları borcama dizildi.");
+                    setBottomHint("Buzdolabında dinlendirme ve kakao eleme için <strong>Sonraki Adıma Geçin</strong>.");
+                    enableNextStageButton("Son Aşamaya Geç");
+                }
+            });
+        }
+
+        /* ============================================================
+         * ADIM 6: BUZDOLABI DİNLENDİRME VE SÜZGEÇLE KAKAO SERPME
+         * ============================================================ */
+        function renderStage6FridgeAndCocoaSieve(viewport) {
+            let chilledHours = 0;
+            let chillComplete = false;
+            let dustedCells = 0;
+            const totalCells = 12;
+
+            setBottomHint("Önce tiramisuyu <strong>Buzdolabında 5 Saat Dinlendir</strong> butonuna tıklayarak soğutun.");
+
+            viewport.innerHTML = `
+                <div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <!-- Left: Refrigerator Chill Station -->
+                    <div class="bg-gradient-to-b from-sky-50 to-sky-100 p-4 rounded-3xl border-4 border-sky-300 shadow-lg flex flex-col items-center gap-3">
+                        <div class="w-full flex justify-between items-center text-xs font-extrabold text-sky-900 border-b border-sky-200 pb-1.5">
+                            <span>❄️ İtalyan Soğutucu (+4°C)</span>
+                            <span id="s6HoursBadge" class="px-2.5 py-0.5 rounded-full bg-sky-200">0 / 5 Saat</span>
+                        </div>
+
+                        <div class="w-20 h-20 rounded-full bg-white border-4 border-gold shadow flex items-center justify-center">
+                            <i id="s6ClockIcon" class="fa-regular fa-clock text-3xl text-espresso transition-transform duration-300"></i>
+                        </div>
+
+                        <button id="s6ChillBtn" class="btn-action w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs sm:text-sm shadow flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-snowflake"></i>
+                            <span>Buzdolabında 5 Saat Dinlendir</span>
+                        </button>
+                    </div>
+
+                    <!-- Right: Interactive Cocoa Sieve (Süzgeç) Over Tiramisu -->
+                    <div id="s6CocoaStation" class="bg-white/90 p-4 rounded-3xl border-2 border-gold/50 shadow-md flex flex-col items-center gap-3 opacity-50 pointer-events-none transition-opacity">
+                        <div class="w-full flex justify-between items-center text-xs font-bold">
+                            <span class="text-espresso">🍫 Süzgeçle Toz Kakao Eleme:</span>
+                            <span id="s6CocoaPct" class="text-terracotta font-extrabold">0%</span>
+                        </div>
+
+                        <!-- Interactive Moving Cocoa Sieve SVG -->
+                        <div class="relative w-full flex flex-col items-center">
+                            <div id="sieveVisual" class="flex items-center gap-1 bg-amber-100 border-2 border-espresso px-3 py-1 rounded-full shadow-md text-xs font-extrabold text-espresso mb-1 transition-transform">
+                                <span>🥄 Kakao Süzgeci (Gezdir / Tıkla)</span>
+                            </div>
+
+                            <!-- 12-Cell Tiramisu Top Surface -->
+                            <div id="tiramisuSurfaceGrid" class="w-64 sm:w-72 h-36 bg-[#FFFBEB] rounded-2xl border-4 border-sky-200 shadow-inner p-1.5 grid grid-cols-4 grid-rows-3 gap-1 cursor-crosshair relative overflow-hidden">
+                                ${Array.from({ length: totalCells }).map((_, idx) => `
+                                    <div data-cell="${idx}" class="cocoa-cell w-full h-full rounded-md bg-[#FFFBEB] transition-colors duration-300 flex items-center justify-center text-xs text-transparent select-none">
+                                        ✦
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2 w-full">
+                            <button id="s6ShakeSieveBtn" class="w-1/2 py-2.5 rounded-xl bg-parchment hover:bg-gold/40 text-espresso font-bold text-xs border border-gold transition">
+                                Süzgeci Salla (Serp)
+                            </button>
+                            <button id="s6ServeBtn" disabled class="w-1/2 py-2.5 rounded-xl bg-gray-300 text-gray-500 font-bold text-xs transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-utensils"></i>
+                                <span>Dilimle & Servis Et</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const s6ChillBtn = document.getElementById('s6ChillBtn');
+            const s6ClockIcon = document.getElementById('s6ClockIcon');
+            const s6HoursBadge = document.getElementById('s6HoursBadge');
+            const s6CocoaStation = document.getElementById('s6CocoaStation');
+            const sieveVisual = document.getElementById('sieveVisual');
+            const s6CocoaPct = document.getElementById('s6CocoaPct');
+            const s6ShakeSieveBtn = document.getElementById('s6ShakeSieveBtn');
+            const s6ServeBtn = document.getElementById('s6ServeBtn');
+            const cells = viewport.querySelectorAll('.cocoa-cell');
+
+            s6ChillBtn.addEventListener('click', () => {
+                if (chillComplete) return;
+                s6ChillBtn.disabled = true;
+                s6ChillBtn.classList.remove('btn-action');
+
+                const timer = setInterval(() => {
+                    chilledHours++;
+                    sfx.playPop(440 + chilledHours * 60, 0.08);
+                    s6ClockIcon.style.transform = `rotate(${chilledHours * 72}deg)`;
+                    s6HoursBadge.textContent = `${chilledHours} / 5 Saat`;
+
+                    if (chilledHours >= 5) {
+                        clearInterval(timer);
+                        chillComplete = true;
+                        s6ChillBtn.className = "w-full py-3 rounded-xl bg-pistachio text-white font-bold text-xs sm:text-sm shadow flex items-center justify-center gap-2";
+                        s6ChillBtn.innerHTML = `<i class="fa-solid fa-check"></i> <span>5 Saat Dinlendirildi!</span>`;
+
+                        s6CocoaStation.classList.remove('opacity-50', 'pointer-events-none');
+                        showToast("Tiramisu soğudu! Şimdi süzgeci tiramisunun üzerinde gezdirerek kakao eleyin.");
+                        setBottomHint("Fareyi tiramisunun üzerinde gezdirin veya <strong>Süzgeci Salla</strong> butonuna tıklayarak kakaoyu eleyin!");
+                    }
+                }, 380);
+                gameState.activeIntervals.push(timer);
+            });
+
+            function dustCell(cell) {
+                if (!chillComplete || cell.dataset.dusted === "true") return;
+                cell.dataset.dusted = "true";
+                dustedCells++;
+                sfx.playSiftSound();
+
+                sieveVisual.style.transform = `translateX(${(dustedCells % 2 === 0 ? 12 : -12)}px)`;
+                cell.className = "cocoa-cell w-full h-full rounded-md bg-gradient-to-br from-mocha to-espresso transition-all duration-300 flex items-center justify-center text-xs text-gold/40 select-none shadow-inner";
+
+                const pct = Math.round((dustedCells / totalCells) * 100);
+                gameState.cocoaCoverage = pct;
+                s6CocoaPct.textContent = `${pct}%`;
+
+                if (dustedCells >= totalCells) {
+                    sieveVisual.style.transform = "translateX(0px)";
+                    s6ShakeSieveBtn.disabled = true;
+                    s6ShakeSieveBtn.classList.add('opacity-50');
+                    s6ServeBtn.disabled = false;
+                    s6ServeBtn.className = "btn-action w-1/2 py-2.5 rounded-xl bg-gradient-to-r from-terracotta to-espresso text-white font-bold text-xs shadow-lg flex items-center justify-center gap-1.5 cursor-pointer";
+                    showToast("Muhteşem! Tiramisunun üzeri tamamen toz kakao ile kaplandı.");
+                    setBottomHint("Şimdi <strong>Dilimle & Servis Et</strong> butonuna tıklayarak şef puanınızı görün!");
+                }
+            }
+
+            cells.forEach(cell => {
+                cell.addEventListener('mouseenter', () => dustCell(cell));
+                cell.addEventListener('click', () => dustCell(cell));
+            });
+
+            const surfaceGrid = document.getElementById('tiramisuSurfaceGrid');
+            surfaceGrid.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const el = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (el && el.classList.contains('cocoa-cell')) dustCell(el);
+            });
+
+            s6ShakeSieveBtn.addEventListener('click', () => {
+                cells.forEach((cell, i) => setTimeout(() => dustCell(cell), i * 55));
+            });
+
+            s6ServeBtn.addEventListener('click', () => {
+                sfx.playSuccessChord();
+                renderFinalScoreScreen(viewport);
+            });
+        }
+
+        /* ============================================================
+         * FINAL CHEF SCORE & FEEDBACK SCREEN
+         * ============================================================ */
+        function renderFinalScoreScreen(viewport) {
+            const finalScore = gameState.score;
+            const starsCount = finalScore >= 90 ? 3 : finalScore >= 75 ? 2 : 1;
+            const rankTitle = finalScore >= 90
+                ? "Maestro Pasticcere (Baş Tiramisu Ustası)"
+                : finalScore >= 75
+                ? "Usta İtalyan Şefi"
+                : "Yetenekli Pastacı Çırağı";
+
+            setBottomHint("Tebrikler! Orijinal İtalyan usulü tiramisu tarifini başarıyla tamamladınız.");
+            disableNextStageButton();
+            document.getElementById('nextStageBtn').classList.add('hidden');
+
+            viewport.innerHTML = `
+                <div class="w-full max-w-3xl bg-white/95 border-4 border-gold rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-col items-center text-center gap-4 animate-float">
+                    <!-- Stars Row -->
+                    <div class="flex items-center gap-2 text-3xl sm:text-4xl text-gold">
+                        ${[1, 2, 3].map(s => s <= starsCount
+                            ? `<i class="fa-solid fa-star drop-shadow"></i>`
+                            : `<i class="fa-regular fa-star text-gray-300"></i>`
+                        ).join('')}
+                    </div>
+
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-widest text-terracotta">${rankTitle}</span>
+                        <h3 class="font-serif text-2xl sm:text-3xl font-extrabold text-espresso mt-0.5">
+                            Nefis İtalyan Tiramisu Hazır!
+                        </h3>
+                    </div>
+
+                    <!-- Plated Tiramisu Slice Illustration -->
+                    <div class="flex flex-col items-center my-1">
+                        <div class="w-44 h-28 bg-cream rounded-2xl border-2 border-gold/50 shadow-inner flex flex-col items-center justify-center p-3 relative">
+                            <!-- Cocoa Top -->
+                            <div class="w-28 h-3 bg-espresso rounded-t-md"></div>
+                            <!-- Cream 2 -->
+                            <div class="w-28 h-5 bg-[#FFFBEB] border-x border-amber-100"></div>
+                            <!-- Soaked Ladyfinger 2 -->
+                            <div class="w-28 h-4 bg-amber-800 rounded-sm"></div>
+                            <!-- Cream 1 -->
+                            <div class="w-28 h-5 bg-[#FEF9C3] border-x border-amber-100"></div>
+                            <!-- Soaked Ladyfinger 1 -->
+                            <div class="w-28 h-4 bg-amber-800 rounded-b-sm"></div>
+                            <!-- Plate Rim -->
+                            <div class="w-36 h-2 bg-gray-300 rounded-full mt-1"></div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Chef Metrics -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full text-xs sm:text-sm">
+                        <div class="bg-parchment/70 p-3 rounded-2xl border border-gold/40">
+                            <div class="text-mocha font-semibold">Toplam Lezzet Puanı</div>
+                            <div class="text-2xl font-extrabold text-espresso mt-0.5">${finalScore} / 100</div>
+                            <div class="text-[11px] text-pistachio font-bold">${gameState.hasBonusLiqueur ? '+Likör Aromalı ✨' : 'Klasik Espresso'}</div>
+                        </div>
+                        <div class="bg-parchment/70 p-3 rounded-2xl border border-gold/40">
+                            <div class="text-mocha font-semibold">Kedidili Islatma Dengesi</div>
+                            <div class="text-2xl font-extrabold text-terracotta mt-0.5">%${gameState.coffeeDipQuality}</div>
+                            <div class="text-[11px] text-mocha">${gameState.coffeeDipQuality >= 90 ? 'Tam Kıvamında!' : 'Biraz Dikkat'}</div>
+                        </div>
+                        <div class="bg-parchment/70 p-3 rounded-2xl border border-gold/40">
+                            <div class="text-mocha font-semibold">Krema Köpük Kalitesi</div>
+                            <div class="text-2xl font-extrabold text-pistachio mt-0.5">%${gameState.foldingQuality}</div>
+                            <div class="text-[11px] text-mocha">${gameState.foldingQuality >= 90 ? 'Bulut Gibi Hafif!' : 'İyi Kıvam'}</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center justify-center gap-3 mt-2">
+                        <button id="playAgainBtn" class="btn-action px-6 py-3 rounded-xl bg-gradient-to-r from-terracotta to-espresso text-white font-bold text-sm sm:text-base shadow-lg flex items-center gap-2 border-2 border-gold cursor-pointer">
+                            <i class="fa-solid fa-rotate-right"></i>
+                            <span>Tekrar Oyna</span>
+                        </button>
+                        <button id="openRecipeFromEndBtn" class="px-5 py-3 rounded-xl bg-parchment hover:bg-gold/30 text-espresso font-bold text-sm sm:text-base border border-gold flex items-center gap-2 transition cursor-pointer">
+                            <i class="fa-solid fa-book-open text-terracotta"></i>
+                            <span>Yazılı Tarifi Gör</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('playAgainBtn').addEventListener('click', resetGame);
+            document.getElementById('openRecipeFromEndBtn').addEventListener('click', () => {
+                document.getElementById('recipeModal').classList.remove('hidden');
+                document.getElementById('recipeModal').classList.add('flex');
+            });
+        }
+
+        function resetGame() {
+            gameState = {
+                currentStage: 0,
+                score: 100,
+                hasBonusLiqueur: false,
+                foldingQuality: 100,
+                coffeeDipQuality: 100,
+                cocoaCoverage: 0,
+                activeIntervals: []
+            };
+            document.getElementById('liveScoreDisplay').textContent = "100";
+            document.getElementById('nextStageBtn').classList.remove('hidden');
+            loadStage(0);
+        }
+
+        /**************************************************************
+         * GLOBAL EVENT LISTENERS & INITIALIZATION
+         **************************************************************/
+        window.addEventListener('DOMContentLoaded', () => {
+            // Next stage button
+            document.getElementById('nextStageBtn').addEventListener('click', () => {
+                if (gameState.currentStage < STAGES.length - 1) {
+                    sfx.playPop(600, 0.1);
+                    loadStage(gameState.currentStage + 1);
+                }
+            });
+
+            // Sound Toggle
+            document.getElementById('soundToggleBtn').addEventListener('click', () => {
+                sfx.muted = !sfx.muted;
+                const icon = document.getElementById('soundIcon');
+                icon.className = sfx.muted ? 'fa-solid fa-volume-xmark text-red-400' : 'fa-solid fa-volume-high text-gold';
+            });
+
+            // Recipe Modal Toggle
+            const recipeModal = document.getElementById('recipeModal');
+            document.getElementById('recipeModalBtn').addEventListener('click', () => {
+                recipeModal.classList.remove('hidden');
+                recipeModal.classList.add('flex');
+            });
+            document.getElementById('closeRecipeModalBtn').addEventListener('click', () => {
+                recipeModal.classList.add('hidden');
+                recipeModal.classList.remove('flex');
+            });
+            recipeModal.addEventListener('click', (e) => {
+                if (e.target === recipeModal) {
+                    recipeModal.classList.add('hidden');
+                    recipeModal.classList.remove('flex');
+                }
+            });
+
+            // Start Stage 1
+            loadStage(0);
+        });
+    </script>
+</body>
+</html>
